@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<project name="MyWebServer" default="do-deploy" basedir=".">
+	<target name="setup-staging-area">
+		<delete dir="staging" />
+		
+		<mkdir dir="staging/externalLibs" />
+		<mkdir dir="staging/project" />
+		<copy todir="staging/project">
+			<fileset dir="${basedir}">
+				<include name="src/**" />
+			</fileset>
+		</copy>
+		<mkdir dir="staging/projectRefs" />
+	</target>
+	<target name="do-compile">
+		<delete dir="build" />
+		<mkdir dir="build/src" />
+		<mkdir dir="build/libs" />
+		<mkdir dir="build/classes" />
+	
+		<!-- Copy project-libs references -->
+		<copy todir="build/libs">
+			<fileset dir="staging/externalLibs">
+			</fileset>
+		</copy>
+	
+		<!-- Copy project references -->
+	
+		<!-- Copy project sources itself -->
+		<copy todir="build/src">
+			<fileset dir="staging/project/src">
+				<include name="**/*"/>
+			</fileset>
+		</copy>
+	
+		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="build/src" destdir="build/classes" debug="true">
+			<classpath>
+				<fileset dir="build/libs">
+					<include name="*"/>
+				</fileset>
+				<fileset dir="libs">
+					<include name="*"/>
+				</fileset>
+			</classpath>
+		</javac>
+		
+		<!-- Copy over none Java-Files -->
+		<copy todir="build/classes">
+		<fileset dir="staging/project/src">
+			<exclude name="**/*.java"/>
+		</fileset>
+		</copy>
+	
+	
+	</target>
+	<target name="do-deploy" depends="setup-staging-area, do-compile">
+		<delete dir="deploy" />
+		<mkdir dir="deploy" />
+		
+		<jar destfile="deploy/MyWebServer.jar" basedir="build/classes"/>
+	</target>
+</project>
