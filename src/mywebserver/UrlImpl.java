@@ -20,7 +20,11 @@ public class UrlImpl implements Url {
   @Override
   public String getPath() {
     if (this.raw != null) {
-      return this.raw.split("[?]")[0];
+      if (raw.contains("?")) {
+        return this.raw.split("[?]")[0];
+      } else if (raw.contains("#")) {
+        return this.raw.split("[#]")[0];
+      }
     }
 
     return "";
@@ -44,7 +48,10 @@ public class UrlImpl implements Url {
 
   @Override
   public String getFragment() {
-    return null;
+    if (this.raw.contains("#")) {
+      return raw.split("[#]")[1];
+    }
+    return "";
   }
 
   @Override
@@ -80,8 +87,9 @@ public class UrlImpl implements Url {
 
   @Override
   public String[] getSegments() {
-    // TODO Auto-generated method stub
-    return null;
+    return Arrays.stream(raw.substring(1).split("/"))
+        .map(String::trim)
+        .toArray(String[]::new);
   }
 
 }
