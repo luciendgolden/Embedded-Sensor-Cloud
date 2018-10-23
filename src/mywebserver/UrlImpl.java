@@ -20,12 +20,7 @@ public class UrlImpl implements Url {
   @Override
   public String getPath() {
     if (this.raw != null) {
-      if (raw.startsWith("GET")) {
-        String[] requestParam = raw.split(" ");
-        return requestParam[1].split("[?]")[0];
-      } else {
-        return this.raw.split("[?]")[0];
-      }
+      return this.raw.split("[?]")[0];
     }
 
     return "";
@@ -33,12 +28,7 @@ public class UrlImpl implements Url {
 
   @Override
   public String getRawUrl() {
-    if (raw.startsWith("GET")) {
-      String[] requestParam = raw.split(" ");
-      return requestParam[1];
-    } else {
-      return this.raw;
-    }
+    return this.raw;
   }
 
   @Override
@@ -75,16 +65,10 @@ public class UrlImpl implements Url {
   }
 
   private String[] getParameters() {
-
     if (this.raw != null) {
       if (this.raw.contains("?")) {
         String parameters = "";
-        if (this.raw.startsWith("GET")) {
-          String[] requestParam = raw.split(" ");
-          parameters = requestParam[1].split("[?]")[1];
-        } else {
-          parameters = this.raw.split("[?]")[1];
-        }
+        parameters = this.raw.split("[?]")[1];
         String[] parameterArr = parameters.split("[&]");
 
         return parameterArr;
