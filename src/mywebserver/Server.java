@@ -20,6 +20,8 @@ public abstract class Server implements Request {
   private BufferedReader in;
   private PrintWriter out;
 
+  private String input;
+
   public Server() {
   }
 
@@ -32,10 +34,13 @@ public abstract class Server implements Request {
     this.socket = serverSocket.accept();
   }
 
-
   public void start() throws IOException {
-    readMessage(socket.getInputStream());
-    writeMessage(socket.getOutputStream());
+    setIn(socket.getInputStream());
+    setOut(socket.getOutputStream());
+
+    readMessage();
+    writeMessage();
+
     stop();
   }
 
@@ -46,24 +51,62 @@ public abstract class Server implements Request {
     serverSocket.close();
   }
 
-  private void readMessage(InputStream inputStream) throws IOException {
-    this.in = new BufferedReader(new InputStreamReader(inputStream));
+  public String readMessage() throws IOException {
+    if(in != null){
+      this.input = in.readLine();
 
-    final String input = in.readLine();
+      if (input == null) {
+        throw new IllegalArgumentException("Input must not be null!");
+      }
 
-    if (input == null) {
-      return;
+      return input.split(" ")[1]; // i.e. GET /index.html?x=1&y=2 HTTP1.1
     }
 
-    final String[] requestParam = input.split(" "); // GET .. HTTP1.1
-    final Url url = new UEB1Impl().getUrl(requestParam[1]);
-
-    System.out.println(url.getPath());
-    System.out.println(url.getRawUrl());
-    System.out.println(url.getParameter());
+    throw new IllegalArgumentException("BufferedReader must not be null!");
   }
 
-  private void writeMessage(OutputStream outputStream) throws IOException {
-    this.out = new PrintWriter(new OutputStreamWriter(outputStream));
+  public void writeMessage() throws IOException {
+    if(out != null){
+      if (input.equals("index.html")) {
+        out.println("hello client");
+      }
+      else {
+        out.println("unrecognised greeting");
+      }
+    }
+
+    throw new IllegalArgumentException("PrintWriter must not be null!");
+  }
+
+  public ServerSocket getServerSocket() {
+    return serverSocket;
+  }
+
+  public void setServerSocket(ServerSocket serverSocket) {
+    this.serverSocket = serverSocket;
+  }
+
+  public Socket getSocket() {
+    return socket;
+  }
+
+  public void setSocket(Socket socket) {
+    this.socket = socket;
+  }
+
+  public BufferedReader getIn() {
+    return in;
+  }
+
+  public void setIn(InputStream in) {
+    this.in = new BufferedReader(new InputStreamReader(in));
+  }
+
+  public PrintWriter getOut() {
+    return out;
+  }
+
+  public void setOut(OutputStream out) {
+    this.out = new PrintWriter(new OutputStreamWriter(out));
   }
 }

@@ -1,33 +1,36 @@
 package uebungen;
 
-import java.io.InputStream;
-
-import mywebserver.ServerImpl;
-import mywebserver.UrlImpl;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
 import BIF.SWE1.interfaces.UEB2;
 import BIF.SWE1.interfaces.Url;
+import java.io.InputStream;
+import mywebserver.Server;
+import mywebserver.ServerImpl;
+import mywebserver.UrlImpl;
 
 public class UEB2Impl implements UEB2 {
 
-	@Override
-	public void helloWorld() {
+  @Override
+  public void helloWorld() {
 
-	}
+  }
 
-	@Override
-	public Url getUrl(String s) {
-		return new UrlImpl(s);
-	}
+  @Override
+  public Url getUrl(String s) {
+    return new UrlImpl(s);
+  }
 
-	@Override
-	public Request getRequest(InputStream inputStream) {
-		return new ServerImpl();
-	}
+  @Override
+  public Request getRequest(InputStream inputStream) {
+    Server server = new ServerImpl();
+    server.setIn(inputStream);
 
-	@Override
-	public Response getResponse() {
-		return null;
-	}
+    return server;
+  }
+
+  @Override
+  public Response getResponse() {
+    return null;
+  }
 }
