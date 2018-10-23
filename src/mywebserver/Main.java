@@ -10,13 +10,8 @@ public class Main {
   private final static int MY_PORT = 8082;
 
   public static void main(String[] args) throws Exception {
-    final ServerSocket listener = new ServerSocket(MY_PORT);
-    System.out.printf("Started Server on Port %s\n", listener.getLocalPort());
-    try {
-        new Handler(listener.accept()).start();
-    }finally {
-      listener.close();
-    }
+    final Server server = new ServerImpl(MY_PORT);
+    server.start();
   }
 
 }
