@@ -17,13 +17,11 @@ public class UEB2Impl implements UEB2 {
 
 	@Override
 	public Url getUrl(String s) {
-		return null;
+		return new UrlImpl(s);
 	}
 
 	@Override
-	public Request getRequest(InputStream inputStream) {
-		return null;
-	}
+	public Request getRequest(InputStream inputStream) { return null; }
 
 	@Override
 	public Response getResponse() {
