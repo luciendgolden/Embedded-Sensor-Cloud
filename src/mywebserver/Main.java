@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 public class Main {
 
+  //logger for audit stuff
   private final static Logger logger = Logger.getLogger("requests");
 
   private final static int MY_PORT = 8082;
