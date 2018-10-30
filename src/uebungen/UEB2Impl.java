@@ -2,6 +2,7 @@ package uebungen;
 
 import java.io.InputStream;
 
+import mywebserver.ServerImpl;
 import mywebserver.UrlImpl;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
@@ -21,7 +22,9 @@ public class UEB2Impl implements UEB2 {
 	}
 
 	@Override
-	public Request getRequest(InputStream inputStream) { return null; }
+	public Request getRequest(InputStream inputStream) {
+		return new ServerImpl();
+	}
 
 	@Override
 	public Response getResponse() {

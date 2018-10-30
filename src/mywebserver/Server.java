@@ -1,5 +1,6 @@
 package mywebserver;
 
+import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Url;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,12 +13,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import uebungen.UEB1Impl;
 
-public class Server {
+public abstract class Server implements Request {
 
   private ServerSocket serverSocket;
   private Socket socket;
   private BufferedReader in;
   private PrintWriter out;
+
+  public Server() {
+  }
 
   /**
    * Constructs a handler thread, squirreling away the socket. All the interesting work is done in
@@ -26,22 +30,25 @@ public class Server {
   public Server(int port) throws IOException {
     this.serverSocket = new ServerSocket(port);
     this.socket = serverSocket.accept();
-
-
   }
 
 
   public void start() throws IOException {
-    try {
-      readMessage(socket.getInputStream());
-      writeMessage(socket.getOutputStream());
-    } finally {
-      socket.close();
-    }
+    readMessage(socket.getInputStream());
+    writeMessage(socket.getOutputStream());
+    stop();
+  }
+
+  public void stop() throws IOException {
+    in.close();
+    out.close();
+    socket.close();
+    serverSocket.close();
   }
 
   private void readMessage(InputStream inputStream) throws IOException {
     this.in = new BufferedReader(new InputStreamReader(inputStream));
+
     final String input = in.readLine();
 
     if (input == null) {
@@ -59,6 +66,4 @@ public class Server {
   private void writeMessage(OutputStream outputStream) throws IOException {
     this.out = new PrintWriter(new OutputStreamWriter(outputStream));
   }
-
-
 }
