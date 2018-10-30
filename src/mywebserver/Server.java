@@ -1,7 +1,5 @@
 package mywebserver;
 
-import BIF.SWE1.interfaces.Request;
-import BIF.SWE1.interfaces.Url;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,9 +9,8 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import uebungen.UEB1Impl;
 
-public abstract class Server implements Request {
+public class Server{
 
   private ServerSocket serverSocket;
   private Socket socket;
@@ -31,6 +28,7 @@ public abstract class Server implements Request {
    */
   public Server(int port) throws IOException {
     this.serverSocket = new ServerSocket(port);
+    //The accept() call blocks. That is, the program stops here and waits, possibly for hours or days, until a client connects on port
     this.socket = serverSocket.accept();
   }
 
@@ -38,7 +36,7 @@ public abstract class Server implements Request {
     setIn(socket.getInputStream());
     setOut(socket.getOutputStream());
 
-    readMessage();
+    setInput(readMessage());
     writeMessage();
 
     stop();
@@ -52,30 +50,31 @@ public abstract class Server implements Request {
   }
 
   public String readMessage() throws IOException {
-    if(in != null){
-      this.input = in.readLine();
+    if (in != null) {
+      final String raw = in.readLine();
 
-      if (input == null) {
+      if (raw == null) {
         throw new IllegalArgumentException("Input must not be null!");
       }
 
-      return input.split(" ")[1]; // i.e. GET /index.html?x=1&y=2 HTTP1.1
+      return raw.split(" ")[1]; // i.e. GET /index.html?x=1&y=2 HTTP1.1
     }
 
     throw new IllegalArgumentException("BufferedReader must not be null!");
   }
 
   public void writeMessage() throws IOException {
-    if(out != null){
+    if (out != null) {
       if (input.equals("index.html")) {
         out.println("hello client");
-      }
-      else {
+      } else {
         out.println("unrecognised greeting");
       }
-    }
 
-    throw new IllegalArgumentException("PrintWriter must not be null!");
+      out.flush();
+    }else {
+      throw new IllegalArgumentException("PrintWriter must not be null!");
+    }
   }
 
   public ServerSocket getServerSocket() {
@@ -108,5 +107,13 @@ public abstract class Server implements Request {
 
   public void setOut(OutputStream out) {
     this.out = new PrintWriter(new OutputStreamWriter(out));
+  }
+
+  public String getInput() {
+    return input;
+  }
+
+  public void setInput(String input) {
+    this.input = input;
   }
 }

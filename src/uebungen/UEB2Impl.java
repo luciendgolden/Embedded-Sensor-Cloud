@@ -5,8 +5,8 @@ import BIF.SWE1.interfaces.Response;
 import BIF.SWE1.interfaces.UEB2;
 import BIF.SWE1.interfaces.Url;
 import java.io.InputStream;
+import mywebserver.RequestImpl;
 import mywebserver.Server;
-import mywebserver.ServerImpl;
 import mywebserver.UrlImpl;
 
 public class UEB2Impl implements UEB2 {
@@ -23,10 +23,7 @@ public class UEB2Impl implements UEB2 {
 
   @Override
   public Request getRequest(InputStream inputStream) {
-    Server server = new ServerImpl();
-    server.setIn(inputStream);
-
-    return server;
+    return new RequestImpl();
   }
 
   @Override
