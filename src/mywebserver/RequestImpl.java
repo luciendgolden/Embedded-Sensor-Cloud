@@ -1,18 +1,11 @@
 package mywebserver;
 
+import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Url;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-public class ServerImpl extends Server{
-
-  public ServerImpl(int port) throws IOException {
-    super(port);
-  }
-
-  public ServerImpl() {
-  }
+public class RequestImpl implements Request {
 
   @Override
   public boolean isValid() {

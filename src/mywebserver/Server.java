@@ -1,7 +1,5 @@
 package mywebserver;
 
-import BIF.SWE1.interfaces.Request;
-import BIF.SWE1.interfaces.Url;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,14 +9,15 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import uebungen.UEB1Impl;
 
-public abstract class Server implements Request {
+public class Server{
 
   private ServerSocket serverSocket;
   private Socket socket;
   private BufferedReader in;
   private PrintWriter out;
+
+  private String input;
 
   public Server() {
   }
@@ -29,13 +28,17 @@ public abstract class Server implements Request {
    */
   public Server(int port) throws IOException {
     this.serverSocket = new ServerSocket(port);
+    //The accept() call blocks. That is, the program stops here and waits, possibly for hours or days, until a client connects on port
     this.socket = serverSocket.accept();
   }
 
-
   public void start() throws IOException {
-    readMessage(socket.getInputStream());
-    writeMessage(socket.getOutputStream());
+    setIn(socket.getInputStream());
+    setOut(socket.getOutputStream());
+
+    setInput(readMessage());
+    writeMessage();
+
     stop();
   }
 
@@ -46,24 +49,71 @@ public abstract class Server implements Request {
     serverSocket.close();
   }
 
-  private void readMessage(InputStream inputStream) throws IOException {
-    this.in = new BufferedReader(new InputStreamReader(inputStream));
+  public String readMessage() throws IOException {
+    if (in != null) {
+      final String raw = in.readLine();
 
-    final String input = in.readLine();
+      if (raw == null) {
+        throw new IllegalArgumentException("Input must not be null!");
+      }
 
-    if (input == null) {
-      return;
+      return raw.split(" ")[1]; // i.e. GET /index.html?x=1&y=2 HTTP1.1
     }
 
-    final String[] requestParam = input.split(" "); // GET .. HTTP1.1
-    final Url url = new UEB1Impl().getUrl(requestParam[1]);
-
-    System.out.println(url.getPath());
-    System.out.println(url.getRawUrl());
-    System.out.println(url.getParameter());
+    throw new IllegalArgumentException("BufferedReader must not be null!");
   }
 
-  private void writeMessage(OutputStream outputStream) throws IOException {
-    this.out = new PrintWriter(new OutputStreamWriter(outputStream));
+  public void writeMessage() throws IOException {
+    if (out != null) {
+      if (input.equals("index.html")) {
+        out.println("hello client");
+      } else {
+        out.println("unrecognised greeting");
+      }
+
+      out.flush();
+    }else {
+      throw new IllegalArgumentException("PrintWriter must not be null!");
+    }
+  }
+
+  public ServerSocket getServerSocket() {
+    return serverSocket;
+  }
+
+  public void setServerSocket(ServerSocket serverSocket) {
+    this.serverSocket = serverSocket;
+  }
+
+  public Socket getSocket() {
+    return socket;
+  }
+
+  public void setSocket(Socket socket) {
+    this.socket = socket;
+  }
+
+  public BufferedReader getIn() {
+    return in;
+  }
+
+  public void setIn(InputStream in) {
+    this.in = new BufferedReader(new InputStreamReader(in));
+  }
+
+  public PrintWriter getOut() {
+    return out;
+  }
+
+  public void setOut(OutputStream out) {
+    this.out = new PrintWriter(new OutputStreamWriter(out));
+  }
+
+  public String getInput() {
+    return input;
+  }
+
+  public void setInput(String input) {
+    this.input = input;
   }
 }
