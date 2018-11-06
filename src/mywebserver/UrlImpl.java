@@ -24,6 +24,8 @@ public class UrlImpl implements Url {
         return this.raw.split("[?]")[0];
       } else if (raw.contains("#")) {
         return this.raw.split("[#]")[0];
+      }else {
+        return this.raw;
       }
     }
 

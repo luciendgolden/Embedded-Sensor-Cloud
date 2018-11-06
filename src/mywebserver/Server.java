@@ -36,7 +36,7 @@ public class Server{
     setIn(socket.getInputStream());
     setOut(socket.getOutputStream());
 
-    setInput(readMessage());
+    setInput(readMessageFirstLine());
     writeMessage();
 
     stop();
@@ -49,7 +49,7 @@ public class Server{
     serverSocket.close();
   }
 
-  public String readMessage() throws IOException {
+  public String readMessageFirstLine() throws IOException {
     if (in != null) {
       final String raw = in.readLine();
 
