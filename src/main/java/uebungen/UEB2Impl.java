@@ -1,12 +1,12 @@
-package uebungen;
+package main.java.uebungen;
 
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
 import BIF.SWE1.interfaces.UEB2;
 import BIF.SWE1.interfaces.Url;
 import java.io.InputStream;
-import request.RequestImpl;
-import mywebserver.UrlImpl;
+import main.java.request.RequestImpl;
+import main.java.url.UrlImpl;
 
 public class UEB2Impl implements UEB2 {
 

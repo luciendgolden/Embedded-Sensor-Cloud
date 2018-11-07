@@ -1,4 +1,4 @@
-package uebungen;
+package main.java.uebungen;
 
 import java.io.InputStream;
 

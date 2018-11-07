@@ -1,4 +1,4 @@
-package request;
+package main.java.request;
 
 public enum HttpMethods {
   GET,

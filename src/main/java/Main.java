@@ -1,10 +1,9 @@
-package mywebserver;
+package main.java;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import uebungen.UEB1Impl;
+import main.java.mywebserver.Server;
 
 public class Main {
 

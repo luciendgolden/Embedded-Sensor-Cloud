@@ -1,4 +1,4 @@
-package mywebserver;
+package main.java.url;
 
 import BIF.SWE1.interfaces.Url;
 import java.util.Arrays;

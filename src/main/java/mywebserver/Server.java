@@ -1,4 +1,4 @@
-package mywebserver;
+package main.java.mywebserver;
 
 import java.io.BufferedReader;
 import java.io.IOException;

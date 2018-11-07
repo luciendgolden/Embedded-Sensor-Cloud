@@ -1,4 +1,4 @@
-package response;
+package main.java.response;
 
 import BIF.SWE1.interfaces.Response;
 import java.io.InputStream;
