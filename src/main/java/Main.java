@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.java.mywebserver.Server;
+import main.java.url.UrlImpl;
 
 public class Main {
 
@@ -16,11 +17,9 @@ public class Main {
     Server server = null;
 
     try {
-      logger.info( "Starting server on port " + MY_PORT);
+      logger.info("Starting server on port " + MY_PORT);
       server = new Server(MY_PORT);
       server.start();
-
-      System.out.println(server.getInput());
     } catch (IOException e) {
       logger.log(Level.SEVERE, "Unexpected error " + e.getMessage(), e);
     }
