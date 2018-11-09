@@ -1,4 +1,4 @@
-package mywebserver;
+package main.java.url;
 
 import BIF.SWE1.interfaces.Url;
 import java.util.Arrays;
@@ -20,7 +20,13 @@ public class UrlImpl implements Url {
   @Override
   public String getPath() {
     if (this.raw != null) {
-      return this.raw.split("[?]")[0];
+      if (raw.contains("?")) {
+        return this.raw.split("[?]")[0];
+      } else if (raw.contains("#")) {
+        return this.raw.split("[#]")[0];
+      }else {
+        return this.raw;
+      }
     }
 
     return "";
@@ -44,7 +50,10 @@ public class UrlImpl implements Url {
 
   @Override
   public String getFragment() {
-    return null;
+    if (this.raw.contains("#")) {
+      return raw.split("[#]")[1];
+    }
+    return "";
   }
 
   @Override
@@ -65,6 +74,7 @@ public class UrlImpl implements Url {
   }
 
   private String[] getParameters() {
+
     if (this.raw != null) {
       if (this.raw.contains("?")) {
         String parameters = "";
@@ -80,8 +90,9 @@ public class UrlImpl implements Url {
 
   @Override
   public String[] getSegments() {
-    // TODO Auto-generated method stub
-    return null;
+    return Arrays.stream(raw.substring(1).split("/"))
+        .map(String::trim)
+        .toArray(String[]::new);
   }
 
 }

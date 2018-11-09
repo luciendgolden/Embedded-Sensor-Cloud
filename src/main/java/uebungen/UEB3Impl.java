@@ -1,13 +1,13 @@
-package uebungen;
+package main.java.uebungen;
 
 import java.io.InputStream;
 
-import BIF.SWE1.interfaces.PluginManager;
+import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
-import BIF.SWE1.interfaces.UEB4;
+import BIF.SWE1.interfaces.UEB3;
 
-public class UEB4Impl implements UEB4 {
+public class UEB3Impl implements UEB3 {
 
 	@Override
 	public void helloWorld() {
@@ -25,7 +25,7 @@ public class UEB4Impl implements UEB4 {
 	}
 
 	@Override
-	public PluginManager getPluginManager() {
+	public Plugin getTestPlugin() {
 		return null;
 	}
 }
