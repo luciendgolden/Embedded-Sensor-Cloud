@@ -115,7 +115,7 @@ public class ResponseImpl implements Response {
 
   @Override
   public void setContent(InputStream inputStream) {
-    
+
   }
 
   @Override

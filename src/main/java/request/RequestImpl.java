@@ -21,6 +21,8 @@ public class RequestImpl implements Request {
   private String[] parameters;
 
   /**
+   * https://www.tutorialspoint.com/http/http_requests.htm
+   *
    * @param in - Get an Inputstream with a standardized http header
    * GET / HTTP/1.1
    * Host: localhost
@@ -31,6 +33,17 @@ public class RequestImpl implements Request {
    * Accept-Language: de-AT,de;q=0.8,en-US;q=0.6,en;q=0.4
    */
   public RequestImpl(InputStream in) {
+    /* TODO - FactoryPattern
+       message-body
+
+       i.e.
+       application/x-www-form-urlencoded
+       licenseID=string&content=string&/paramsXML=string
+
+       text/xml
+       <?xml version="1.0" encoding="utf-8"?>
+       <string xmlns="http://clearforest.com/">string</string>
+     */
     this.in = new BufferedReader(new InputStreamReader(in));
     try {
       setParameters();
@@ -40,8 +53,8 @@ public class RequestImpl implements Request {
   }
 
   private void setParameters() throws IOException {
-    final String firstLine = in.readLine();
-    this.parameters = firstLine.split("[ ]");
+    final String requestLine = in.readLine();
+    this.parameters = requestLine.split("[ ]");
   }
 
   public void readMessage() throws IOException {
