@@ -9,7 +9,9 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import main.java.foundation.EnumUtil;
 import main.java.url.UrlImpl;
+import org.apache.commons.lang3.EnumUtils;
 
 public class RequestImpl implements Request {
 
@@ -31,19 +33,15 @@ public class RequestImpl implements Request {
   public RequestImpl(InputStream in) {
     this.in = new BufferedReader(new InputStreamReader(in));
     try {
-      setParameters(in);
+      setParameters();
     } catch (IOException e) {
       logger.log(Level.FINE, "Unexpected error " + e.getMessage(), e);
     }
   }
 
-  private void setParameters(InputStream in) throws IOException {
-    final String firstLine = this.in.readLine();
+  private void setParameters() throws IOException {
+    final String firstLine = in.readLine();
     this.parameters = firstLine.split("[ ]");
-
-    for (String parameter : parameters) {
-      System.out.println(parameter);
-    }
   }
 
   public void readMessage() throws IOException {
@@ -61,7 +59,8 @@ public class RequestImpl implements Request {
     if(parameters.length != 3)
       return false;
 
-    return HttpMethods.contains(parameters[0].toUpperCase()) && parameters[1].startsWith("/");
+    return EnumUtil.contains(HttpMethods.class, parameters[0].toUpperCase())
+        && parameters[1].startsWith("/");
   }
 
   @Override
