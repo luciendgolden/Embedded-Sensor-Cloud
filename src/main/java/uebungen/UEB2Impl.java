@@ -6,6 +6,7 @@ import BIF.SWE1.interfaces.UEB2;
 import BIF.SWE1.interfaces.Url;
 import java.io.InputStream;
 import main.java.request.RequestImpl;
+import main.java.response.ResponseImpl;
 import main.java.url.UrlImpl;
 
 public class UEB2Impl implements UEB2 {
@@ -27,6 +28,6 @@ public class UEB2Impl implements UEB2 {
 
   @Override
   public Response getResponse() {
-    return null;
+    return new ResponseImpl();
   }
 }
