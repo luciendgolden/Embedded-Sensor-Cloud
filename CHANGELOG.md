@@ -1,3 +1,6 @@
+## 0.1.2 (November 11, 2018)
+
+
 ## 0.1.1 (November 11, 2018)
 ### Added
   - finished UE02 requirements
