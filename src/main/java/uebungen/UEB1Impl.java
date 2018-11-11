@@ -1,8 +1,8 @@
-package uebungen;
+package main.java.uebungen;
 
 import BIF.SWE1.interfaces.UEB1;
 import BIF.SWE1.interfaces.Url;
-import mywebserver.UrlImpl;
+import main.java.url.UrlImpl;
 
 public class UEB1Impl implements UEB1 {
 

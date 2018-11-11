@@ -1,4 +1,4 @@
-package mywebserver;
+package main.java.url;
 
 import BIF.SWE1.interfaces.Url;
 import java.util.Arrays;
@@ -20,11 +20,12 @@ public class UrlImpl implements Url {
   @Override
   public String getPath() {
     if (this.raw != null) {
-      if (raw.startsWith("GET")) {
-        String[] requestParam = raw.split(" ");
-        return requestParam[1].split("[?]")[0];
-      } else {
+      if (raw.contains("?")) {
         return this.raw.split("[?]")[0];
+      } else if (raw.contains("#")) {
+        return this.raw.split("[#]")[0];
+      }else {
+        return this.raw;
       }
     }
 
@@ -33,12 +34,7 @@ public class UrlImpl implements Url {
 
   @Override
   public String getRawUrl() {
-    if (raw.startsWith("GET")) {
-      String[] requestParam = raw.split(" ");
-      return requestParam[1];
-    } else {
-      return this.raw;
-    }
+    return this.raw;
   }
 
   @Override
@@ -54,7 +50,10 @@ public class UrlImpl implements Url {
 
   @Override
   public String getFragment() {
-    return null;
+    if (this.raw.contains("#")) {
+      return raw.split("[#]")[1];
+    }
+    return "";
   }
 
   @Override
@@ -79,12 +78,7 @@ public class UrlImpl implements Url {
     if (this.raw != null) {
       if (this.raw.contains("?")) {
         String parameters = "";
-        if (this.raw.startsWith("GET")) {
-          String[] requestParam = raw.split(" ");
-          parameters = requestParam[1].split("[?]")[1];
-        } else {
-          parameters = this.raw.split("[?]")[1];
-        }
+        parameters = this.raw.split("[?]")[1];
         String[] parameterArr = parameters.split("[&]");
 
         return parameterArr;
@@ -96,8 +90,9 @@ public class UrlImpl implements Url {
 
   @Override
   public String[] getSegments() {
-    // TODO Auto-generated method stub
-    return null;
+    return Arrays.stream(raw.substring(1).split("/"))
+        .map(String::trim)
+        .toArray(String[]::new);
   }
 
 }
