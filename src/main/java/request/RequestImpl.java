@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.java.foundation.EnumUtil;
 import main.java.url.UrlImpl;
-import org.apache.commons.lang3.EnumUtils;
 
 public class RequestImpl implements Request {
 
@@ -72,7 +71,7 @@ public class RequestImpl implements Request {
     if(parameters.length != 3)
       return false;
 
-    return EnumUtil.contains(HttpMethods.class, parameters[0].toUpperCase())
+    return EnumUtil.contains(main.java.request.HttpMethods.class, parameters[0].toUpperCase())
         && parameters[1].startsWith("/");
   }
 
