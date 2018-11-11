@@ -1,8 +1,5 @@
 package main.java.foundation;
 
-import org.apache.commons.lang3.StringUtils;
-
-
 public final class Ensurer {
 
   public static <T> T ensureNotNull(T object) {
@@ -23,7 +20,7 @@ public final class Ensurer {
   }
 
   public static String ensureNotBlank(String object, String objectName) {
-    if (StringUtils.isBlank(object)) {
+    if (object.isEmpty()) {
       throw new IllegalArgumentException(String.format("%s must not be null, " +
           "empty or blank!", objectName));
     }
