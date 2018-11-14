@@ -1,16 +1,17 @@
 package main.java.response;
 
 import BIF.SWE1.interfaces.Response;
-import java.io.ByteArrayOutputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectOutputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import main.java.common.Status;
 import main.java.foundation.Ensurer;
 
@@ -29,14 +30,25 @@ public class ResponseImpl implements Response {
 
   private final static Logger logger = Logger.getLogger(ResponseImpl.class.getName());
 
-  private Map<String, String> headers = new HashMap<>();
-  private String contentType;
-  private int contentLength;
+  /**
+   * A Status-line
+   *
+   * Zero or more header (General|Response|Entity) fields followed by CRLF
+   *
+   * An empty line (i.e., a line with nothing preceding the CRLF)
+   * indicating the end of the header fields
+   *
+   * Optionally a message-body
+   */
   private Status status;
-  private String serverHeader;
+  private Map<String, String> headers = new HashMap<>();
   private String content;
 
+  private static final String BLANK_SPACE = " ";
+  private static final String LINE_BREAK = "\n";
+
   private final static String DEFAULT_SERVER_HEADER = "BIF-SWE1-Server";
+  private final static String HTTP_DEFAULT_VERSION = "HTTP/1.1";
 
   /**
    * https://www.tutorialspoint.com/http/http_responses.htm
@@ -53,7 +65,7 @@ public class ResponseImpl implements Response {
    * </html>
    */
   public ResponseImpl() {
-    this.serverHeader = DEFAULT_SERVER_HEADER;
+    headers.put("Server", DEFAULT_SERVER_HEADER);
   }
 
   @Override
@@ -66,8 +78,7 @@ public class ResponseImpl implements Response {
     byte[] responseBytes = new byte[0];
     try {
       responseBytes = content.getBytes("UTF-8");
-    }
-    catch ( UnsupportedEncodingException e ) {
+    } catch (UnsupportedEncodingException e) {
       logger.log(Level.SEVERE, "Unexpected error " + e.getMessage(), e);
     }
 
@@ -76,20 +87,20 @@ public class ResponseImpl implements Response {
 
   @Override
   public String getContentType() {
-    return contentType;
+    return headers.get("Content-Type");
   }
 
   @Override
   public void setContentType(String s) {
     Ensurer.ensureNotNull(s, "contentType");
     Ensurer.ensureNotBlank(s, "contentType");
-    contentType = s;
+    headers.put("Content-Type", s);
   }
 
   @Override
   public void setStatusCode(int i) {
-    Ensurer.ensureNotNull(i, "statuscode");
     status = Status.compareStatusCode(i);
+    Ensurer.ensureNotNull(status, "status");
   }
 
   @Override
@@ -121,14 +132,14 @@ public class ResponseImpl implements Response {
 
   @Override
   public String getServerHeader() {
-    return serverHeader;
+    return headers.get("Server");
 
   }
 
   @Override
   public void setServerHeader(String s) {
     Ensurer.ensureNotNull(s, "server header");
-    this.serverHeader = s;
+    headers.put("Server", s);
   }
 
   @Override
@@ -144,11 +155,49 @@ public class ResponseImpl implements Response {
 
   @Override
   public void setContent(InputStream inputStream) {
+    final BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+    StringBuffer buffer = new StringBuffer();
+    String line;
+    try {
+      while (null != (line = br.readLine())) {
+        buffer.append(line);
+      }
 
+      this.content = buffer.toString();
+    }catch (IOException e){
+      logger.log(Level.SEVERE, "Unexpected error " + e.getMessage(), e);
+    }
   }
 
   @Override
   public void send(OutputStream outputStream) {
+    Ensurer.ensureNotNull(outputStream, "outputstream");
+    Ensurer.ensureNotNull(status, "status");
+    Ensurer.ensureNotNull(headers, "headers");
+    try {
+      final StringBuffer messageStatusLine = new StringBuffer(HTTP_DEFAULT_VERSION);
+      messageStatusLine.append(BLANK_SPACE);
+      messageStatusLine.append(status.getStatusCode()).append(BLANK_SPACE);
+      messageStatusLine.append(status.getDescription()).append(LINE_BREAK);
 
+      final String responseHeaders = headers.entrySet().stream()
+          .map(entry -> entry.getKey() + ": " + entry.getValue())
+          .collect(Collectors.joining(LINE_BREAK));
+
+      //Message Status-Line
+      //Status-Line = HTTP-Version SP Status-Code SP Reason-Phrase CRLF
+      outputStream.write(messageStatusLine.toString().getBytes());
+      //Response Header Fields
+      outputStream.write(responseHeaders.getBytes());
+      outputStream.write(LINE_BREAK.getBytes());
+      if(content != null) {
+        outputStream.write(LINE_BREAK.getBytes());
+        outputStream.write(content.getBytes());
+      }else if(content == null && headers.containsKey("Content-Type")){
+        throw new IllegalArgumentException("Content-Type is set without content");
+      }
+    } catch (IOException e) {
+      logger.log(Level.SEVERE, "Unexpected error " + e.getMessage(), e);
+    }
   }
 }

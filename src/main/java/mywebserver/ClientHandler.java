@@ -41,7 +41,6 @@ public class ClientHandler extends Thread {
 
       RequestFactory.createRequest(clientSocket.getInputStream());
 
-
       /*
       while ((requestLine = in.readLine()) != null) {
 
