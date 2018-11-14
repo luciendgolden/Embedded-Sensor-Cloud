@@ -1,4 +1,4 @@
-package main.java.response;
+package main.java.common;
 
 public enum Status{
   OK(200, "OK"),
