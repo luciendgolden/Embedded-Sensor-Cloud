@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -187,7 +188,7 @@ public class ResponseImpl implements Response {
       finalRes.append(LINE_BREAK);
       finalRes.append(buildBody());
 
-      outputStream.write(finalRes.toString().getBytes());
+      outputStream.write(finalRes.toString().getBytes(Charset.forName("UTF-8")));
     } catch (IOException e) {
       logger.log(Level.SEVERE, "Unexpected error " + e.getMessage(), e);
     }
