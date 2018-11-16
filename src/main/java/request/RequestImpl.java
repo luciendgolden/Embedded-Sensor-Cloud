@@ -63,12 +63,13 @@ public class RequestImpl implements Request {
       this.headers = new HashMap<String, String>();
 
       String line = in.readLine();
+      if(line!=null){
       while (!line.isEmpty()) {
 
         String parts[] = line.split(": ");
         this.headers.put(parts[0].toLowerCase(), parts[1]);
         line = in.readLine();
-      }
+      }}
     }
   }
 
