@@ -7,11 +7,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import main.java.request.RequestLine;
 
-public class BodyReq extends AbstractRequest {
+public class POSTReq extends AbstractRequest {
 
   private String messageBody;
 
-  public BodyReq(RequestLine requestLine, Map<String, String> requestHeader,
+  public POSTReq(RequestLine requestLine, Map<String, String> requestHeader,
       String messageBody) {
     super(requestLine, requestHeader);
     this.messageBody = messageBody;

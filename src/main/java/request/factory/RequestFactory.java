@@ -17,8 +17,8 @@ import main.java.request.event.InvalidRequest;
 public class RequestFactory {
 
   private static final List<BaseRequestFactory> FACTORIES = Lists.immutableList(
-      new BodyReqFactory(),
-      new PlainReqFactory()
+      new POSTReqFactory(),
+      new GETReqFactory()
   );
 
   public RequestFactory() {

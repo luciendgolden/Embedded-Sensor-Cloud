@@ -5,10 +5,10 @@ import java.io.InputStream;
 import java.util.Map;
 import main.java.request.RequestLine;
 
-public class PlainReq extends AbstractRequest {
+public class GETReq extends AbstractRequest {
 
 
-  public PlainReq(RequestLine requestLine, Map<String, String> requestHeader) {
+  public GETReq(RequestLine requestLine, Map<String, String> requestHeader) {
     super(requestLine, requestHeader);
   }
 

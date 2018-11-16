@@ -1,12 +1,11 @@
 package main.java.request.factory;
 
-import java.io.InputStream;
 import java.util.Map;
 import main.java.request.HttpRequestParser;
 import main.java.request.RequestLine;
-import main.java.request.event.PlainReq;
+import main.java.request.event.GETReq;
 
-public class PlainReqFactory implements BaseRequestFactory<PlainReq>{
+public class GETReqFactory implements BaseRequestFactory<GETReq>{
 
   @Override
   public boolean isResponsible(String requestLine) {
@@ -14,10 +13,10 @@ public class PlainReqFactory implements BaseRequestFactory<PlainReq>{
   }
 
   @Override
-  public PlainReq createEventFromRequest(HttpRequestParser parser) {
+  public GETReq createEventFromRequest(HttpRequestParser parser) {
     final RequestLine requestLine = new RequestLine(parser.getRequestLine());
     final Map<String, String> requestHeader = parser.getRequestHeaders();
 
-    return new PlainReq(requestLine, requestHeader);
+    return new GETReq(requestLine, requestHeader);
   }
 }

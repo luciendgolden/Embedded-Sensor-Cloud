@@ -1,12 +1,11 @@
 package main.java.request.factory;
 
-import java.io.InputStream;
 import java.util.Map;
 import main.java.request.HttpRequestParser;
 import main.java.request.RequestLine;
-import main.java.request.event.BodyReq;
+import main.java.request.event.POSTReq;
 
-public class BodyReqFactory implements BaseRequestFactory<BodyReq> {
+public class POSTReqFactory implements BaseRequestFactory<POSTReq> {
 
   @Override
   public boolean isResponsible(String requestLine) {
@@ -14,11 +13,11 @@ public class BodyReqFactory implements BaseRequestFactory<BodyReq> {
   }
 
   @Override
-  public BodyReq createEventFromRequest(HttpRequestParser parser) {
+  public POSTReq createEventFromRequest(HttpRequestParser parser) {
     final RequestLine requestLine = new RequestLine(parser.getRequestLine());
     final Map<String, String> requestHeaders = parser.getRequestHeaders();
     final String messageBody = parser.getMessageBody();
 
-    return new BodyReq(requestLine, requestHeaders, messageBody);
+    return new POSTReq(requestLine, requestHeaders, messageBody);
   }
 }
