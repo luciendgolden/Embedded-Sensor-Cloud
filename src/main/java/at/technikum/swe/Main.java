@@ -1,25 +1,25 @@
-package main.java;
+package at.technikum.swe;
 
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import main.java.mywebserver.Server;
-import main.java.url.UrlImpl;
+import at.technikum.swe.mywebserver.MultiServer;
 
 public class Main {
 
-  //logger for audit stuff
-  private final static Logger logger = Logger.getLogger("requests");
+  private final static Logger logger = Logger.getLogger(Main.class.getName());
 
   private final static int MY_PORT = 8082;
 
   public static void main(String[] args) {
-    Server server = null;
+    MultiServer server = null;
 
     try {
-      logger.info("Starting server on port " + MY_PORT);
-      server = new Server(MY_PORT);
+      logger.info("Starting server on port 127.0.0.1:" + MY_PORT);
+      server = new MultiServer(MY_PORT);
       server.start();
+      server.stop();
+
     } catch (IOException e) {
       logger.log(Level.SEVERE, "Unexpected error " + e.getMessage(), e);
     }

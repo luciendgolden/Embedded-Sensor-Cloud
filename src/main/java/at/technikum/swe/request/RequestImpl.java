@@ -1,7 +1,9 @@
-package main.java.request;
+package at.technikum.swe.request;
 
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Url;
+import at.technikum.swe.foundation.Ensurer;
+import at.technikum.swe.foundation.EnumUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,17 +14,17 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import main.java.foundation.Ensurer;
-import main.java.foundation.EnumUtil;
 import main.java.url.UrlImpl;
 
 public class RequestImpl implements Request {
 
   private final static Logger logger = Logger.getLogger("requests");
 
+  private String requestLine;
+
   private BufferedReader in;
   private String[] parameters;
-  private Map<String,String> headers;
+  private Map<String,String> headers = new HashMap<String, String>();
 
 
   /**
@@ -38,54 +40,36 @@ public class RequestImpl implements Request {
    * Accept-Language: de-AT,de;q=0.8,en-US;q=0.6,en;q=0.4
    */
   public RequestImpl(InputStream in) {
-    /* TODO - FactoryPattern
-       message-body
-
-       i.e.
-       application/x-www-form-urlencoded
-       licenseID=string&content=string&/paramsXML=string
-
-       text/xml
-       <?xml version="1.0" encoding="utf-8"?>
-       <string xmlns="http://clearforest.com/">string</string>
-     */
     this.in = new BufferedReader(new InputStreamReader(in));
     try {
       setParameters();
       setHeaders();
     } catch (IOException e) {
-      logger.log(Level.FINE, "Unexpected error " + e.getMessage(), e);
+      logger.log(Level.WARNING, "Unexpected error " + e.getMessage(), e);
     }
   }
 
   private void setHeaders() throws IOException{
     if(in!=null) {
-      this.headers = new HashMap<String, String>();
-
       String line = in.readLine();
+      logger.info(line);
       if(line!=null){
       while (!line.isEmpty()) {
-
         String parts[] = line.split(": ");
         this.headers.put(parts[0].toLowerCase(), parts[1]);
         line = in.readLine();
+        logger.info(line);
       }}
     }
   }
 
   private void setParameters() throws IOException {
-    final String requestLine = in.readLine();
+    this.requestLine = in.readLine();
+
+    logger.info("Received following request");
+    logger.info(requestLine);
+
     this.parameters = requestLine.split("[ ]");
-  }
-
-  public void readMessage() throws IOException {
-    if (in != null) {
-      String raw;
-
-      while ((raw = in.readLine()) != null) {
-        System.out.println(raw);
-      }
-    }
   }
 
   @Override
@@ -93,7 +77,7 @@ public class RequestImpl implements Request {
     if(parameters.length != 3)
       return false;
 
-    return EnumUtil.contains(main.java.request.HttpMethods.class, parameters[0].toUpperCase())
+    return EnumUtil.contains(HttpMethods.class, parameters[0].toUpperCase())
         && parameters[1].startsWith("/");
   }
 
@@ -156,5 +140,31 @@ public class RequestImpl implements Request {
   @Override
   public byte[] getContentBytes() {
     return new byte[0];
+  }
+
+  public String getRequestLine() {
+    return requestLine;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+
+    String myHeaders = headers.entrySet().stream()
+        .map(entry -> entry.getKey() + ": " + entry.getValue())
+        .collect(Collectors.joining(System.getProperty("line.separator")));
+
+    builder.append("Request Line: ");
+    builder.append(getRequestLine());
+    builder.append("\n\t\t");
+    builder.append("Request Type ");
+    builder.append(getMethod());
+    builder.append("\n\t\t");
+    builder.append("Request Path ");
+    builder.append(getUrl().getPath());
+    builder.append("Headers ");
+    builder.append(myHeaders);
+
+    return builder.toString();
   }
 }

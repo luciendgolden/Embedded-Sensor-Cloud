@@ -1,6 +1,7 @@
-package main.java.response;
+package at.technikum.swe.response;
 
 import BIF.SWE1.interfaces.Response;
+import at.technikum.swe.foundation.Ensurer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,8 +14,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import main.java.foundation.Ensurer;
-import org.omg.IOP.ENCODING_CDR_ENCAPS;
 
 /**
  * Examples of Response Message
@@ -46,7 +45,7 @@ public class ResponseImpl implements Response {
    *
    * Optionally a message-body
    */
-  private Status status;
+  private main.java.response.Status status;
   private Map<String, String> headers = new HashMap<>();
   private String content;
 
@@ -105,7 +104,7 @@ public class ResponseImpl implements Response {
 
   @Override
   public void setStatusCode(int i) {
-    status = Status.compareStatusCode(i);
+    status = main.java.response.Status.compareStatusCode(i);
     Ensurer.ensureNotNull(status, "status");
   }
 

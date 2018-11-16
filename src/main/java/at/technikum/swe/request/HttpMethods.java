@@ -1,4 +1,4 @@
-package main.java.request;
+package at.technikum.swe.request;
 
 import java.util.EnumSet;
 

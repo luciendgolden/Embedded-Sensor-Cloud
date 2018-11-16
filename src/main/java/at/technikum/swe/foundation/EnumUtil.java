@@ -1,4 +1,4 @@
-package main.java.foundation;
+package at.technikum.swe.foundation;
 
 import java.util.EnumSet;
 

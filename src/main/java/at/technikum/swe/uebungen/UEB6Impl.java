@@ -1,4 +1,4 @@
-package main.java.uebungen;
+package at.technikum.swe.uebungen;
 
 import java.io.InputStream;
 import java.time.LocalDate;

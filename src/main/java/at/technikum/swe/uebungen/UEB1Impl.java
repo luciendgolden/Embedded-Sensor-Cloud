@@ -1,4 +1,4 @@
-package main.java.uebungen;
+package at.technikum.swe.uebungen;
 
 import BIF.SWE1.interfaces.UEB1;
 import BIF.SWE1.interfaces.Url;

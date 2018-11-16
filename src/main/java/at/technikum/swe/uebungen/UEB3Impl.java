@@ -1,14 +1,13 @@
-package main.java.uebungen;
-
-import java.io.InputStream;
+package at.technikum.swe.uebungen;
 
 import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
 import BIF.SWE1.interfaces.UEB3;
-import main.java.plugin.TestPlugin;
-import main.java.request.RequestImpl;
-import main.java.response.ResponseImpl;
+import at.technikum.swe.plugin.TestPlugin;
+import at.technikum.swe.request.RequestImpl;
+import at.technikum.swe.response.ResponseImpl;
+import java.io.InputStream;
 
 public class UEB3Impl implements UEB3 {
 
