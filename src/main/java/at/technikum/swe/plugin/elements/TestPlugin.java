@@ -1,9 +1,10 @@
-package at.technikum.swe.plugin;
+package at.technikum.swe.plugin.elements;
 
 import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
 import BIF.SWE1.interfaces.Url;
+import at.technikum.swe.plugin.PluginUtil;
 import at.technikum.swe.response.ResponseImpl;
 
 public class TestPlugin implements Plugin {
