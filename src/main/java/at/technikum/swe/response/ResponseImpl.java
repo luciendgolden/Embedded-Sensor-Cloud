@@ -1,6 +1,7 @@
 package at.technikum.swe.response;
 
 import BIF.SWE1.interfaces.Response;
+import at.technikum.swe.common.Status;
 import at.technikum.swe.foundation.Ensurer;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class ResponseImpl implements Response {
    *
    * Optionally a message-body
    */
-  private main.java.response.Status status;
+  private Status status;
   private Map<String, String> headers = new HashMap<>();
   private String content;
 
@@ -104,7 +105,7 @@ public class ResponseImpl implements Response {
 
   @Override
   public void setStatusCode(int i) {
-    status = main.java.response.Status.compareStatusCode(i);
+    status = Status.compareStatusCode(i);
     Ensurer.ensureNotNull(status, "status");
   }
 
