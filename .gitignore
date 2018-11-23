@@ -3,6 +3,7 @@
 /deploy
 /dist
 /staging
+/classes
 
 # Created by https://www.gitignore.io/api/java,eclipse,intellij
 
