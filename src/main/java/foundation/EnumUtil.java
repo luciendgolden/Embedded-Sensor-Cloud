@@ -1,4 +1,4 @@
-package at.technikum.swe.foundation;
+package main.java.foundation;
 
 import java.util.EnumSet;
 
@@ -6,7 +6,6 @@ public class EnumUtil {
 
   /**
    * Search for a specific Type of an Enum
-   *
    * @param clazz - type of the Enum which should be searched
    * @param name - String to compare
    * @param <T> - Type of the Enum
@@ -20,10 +19,5 @@ public class EnumUtil {
     }
 
     return false;
-  }
-
-  public static <T extends Enum<T>> boolean isEqualTo(Class<T> clazz, String search,
-      T myEnumType) {
-    return myEnumType.name().equals(search);
   }
 }
