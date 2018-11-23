@@ -4,7 +4,7 @@ import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
 import BIF.SWE1.interfaces.UEB3;
-import at.technikum.swe.plugin.TestPlugin;
+import at.technikum.swe.plugin.elements.TestPlugin;
 import at.technikum.swe.request.RequestImpl;
 import at.technikum.swe.response.ResponseImpl;
 import java.io.InputStream;

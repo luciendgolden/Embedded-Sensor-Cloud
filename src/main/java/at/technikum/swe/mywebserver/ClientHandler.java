@@ -4,10 +4,7 @@ import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
 import at.technikum.swe.request.RequestImpl;
 import at.technikum.swe.response.ResponseImpl;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.logging.Logger;
 
