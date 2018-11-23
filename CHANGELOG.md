@@ -1,12 +1,6 @@
 ## 0.2.0 (November 23, 2018)
-  - Merge branch 'feature/UE04' into dev
-  - finished UE04 impl
-  - Hotfix/0.1.2 (#10)
-  - Bump version to 0.1.2.
-  - fixed .gitignore
-  - modified .gitignore
-  - fixed untracked files
-  - implemented new filestructure
+### Added
+  - added 'feature/UE04' support
 
 ## 0.1.2 (November 23, 2018)
 ### Fixed
