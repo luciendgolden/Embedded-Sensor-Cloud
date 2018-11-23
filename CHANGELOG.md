@@ -1,3 +1,8 @@
+## 0.1.2 (November 23, 2018)
+### Fixed
+  - package problem
+  - .gitignore removed /classes
+
 ## 0.1.2 (November 11, 2018)
 ### Removed
   - removed StringUtils common.apache lib
