@@ -1,14 +1,18 @@
 package at.technikum.swe.request;
 
+import static at.technikum.swe.foundation.EnumUtil.isEqualTo;
+
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Url;
+import at.technikum.swe.common.HttpMethods;
 import at.technikum.swe.foundation.Ensurer;
 import at.technikum.swe.foundation.EnumUtil;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -25,6 +29,7 @@ public class RequestImpl implements Request {
   private BufferedReader in;
   private String[] parameters;
   private Map<String,String> headers = new HashMap<String, String>();
+  private String body;
 
 
   /**
@@ -38,37 +43,46 @@ public class RequestImpl implements Request {
    * User-Agent: Unit-Test-Agent/1.0 (The OS)
    * Accept-Encoding: gzip,deflate,sdch
    * Accept-Language: de-AT,de;q=0.8,en-US;q=0.6,en;q=0.4
-   */
+   *
+   * CONTENT.........CONTENT
+   **/
   public RequestImpl(InputStream in) {
     this.in = new BufferedReader(new InputStreamReader(in));
     try {
       setParameters();
       setHeaders();
+      setBody();
     } catch (IOException e) {
       logger.log(Level.WARNING, "Unexpected error " + e.getMessage(), e);
+    }
+  }
+
+  private void setBody() throws IOException {
+
+
+    boolean isPOST = isEqualTo(HttpMethods.class, getMethod(), HttpMethods.POST);
+
+    if(isPOST){
+     if(in!=null){
+       this.body=in.readLine();
+     }
     }
   }
 
   private void setHeaders() throws IOException{
     if(in!=null) {
       String line = in.readLine();
-      logger.info(line);
       if(line!=null){
       while (!line.isEmpty()) {
         String parts[] = line.split(": ");
         this.headers.put(parts[0].toLowerCase(), parts[1]);
         line = in.readLine();
-        logger.info(line);
       }}
     }
   }
 
   private void setParameters() throws IOException {
     this.requestLine = in.readLine();
-
-    logger.info("Received following request");
-    logger.info(requestLine);
-
     this.parameters = requestLine.split("[ ]");
   }
 
@@ -118,28 +132,43 @@ public class RequestImpl implements Request {
 
   @Override
   public int getContentLength() {
-    return 0;
+    return Integer.parseInt(headers.get("content-length"));
   }
 
   @Override
   public String getContentType() {
+    if(headers.size()>0){
+      return headers.get("content-type");
+    }
     return null;
   }
 
   @Override
   public InputStream getContentStream() {
-
+  if(body!=null){
+    return new ByteArrayInputStream(body.getBytes());
+  }
     return null;
   }
 
   @Override
   public String getContentString() {
+    if(body!=null){
+      return body;
+    }
     return null;
   }
 
   @Override
   public byte[] getContentBytes() {
-    return new byte[0];
+    byte[] contentBytes = new byte[0];
+    try {
+      contentBytes = body.getBytes("UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      logger.log(Level.SEVERE, "Unexpected error " + e.getMessage(), e);
+    }
+
+    return contentBytes;
   }
 
   public String getRequestLine() {
@@ -155,14 +184,17 @@ public class RequestImpl implements Request {
         .collect(Collectors.joining(System.getProperty("line.separator")));
 
     builder.append("Request Line: ");
+    builder.append("\n");
     builder.append(getRequestLine());
-    builder.append("\n\t\t");
+    builder.append("\n");
     builder.append("Request Type ");
     builder.append(getMethod());
-    builder.append("\n\t\t");
+    builder.append("\n");
     builder.append("Request Path ");
     builder.append(getUrl().getPath());
+    builder.append("\n");
     builder.append("Headers ");
+    builder.append("\n");
     builder.append(myHeaders);
 
     return builder.toString();
