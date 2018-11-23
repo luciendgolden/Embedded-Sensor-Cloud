@@ -41,13 +41,13 @@ local.properties
 # PDT-specific (PHP Development Tools)
 .buildpath
 
-# sbteclipse plugin
+# sbteclipse at.technikum.swe.plugin
 .target
 
-# Tern plugin
+# Tern at.technikum.swe.plugin
 .tern-project
 
-# TeXlipse plugin
+# TeXlipse at.technikum.swe.plugin
 .texlipse
 
 # STS (Spring Tool Suite)
@@ -139,7 +139,7 @@ hs_err_pid*
 # CMake
 cmake-build-*/
 
-# Mongo Explorer plugin
+# Mongo Explorer at.technikum.swe.plugin
 .idea/**/mongoSettings.xml
 
 # File-based project format
@@ -148,16 +148,16 @@ cmake-build-*/
 # IntelliJ
 out/
 
-# mpeltonen/sbt-idea plugin
+# mpeltonen/sbt-idea at.technikum.swe.plugin
 .idea_modules/
 
-# JIRA plugin
-atlassian-ide-plugin.xml
+# JIRA at.technikum.swe.plugin
+atlassian-ide-at.technikum.swe.plugin.xml
 
-# Cursive Clojure plugin
+# Cursive Clojure at.technikum.swe.plugin
 .idea/replstate.xml
 
-# Crashlytics plugin (for Android Studio and IntelliJ)
+# Crashlytics at.technikum.swe.plugin (for Android Studio and IntelliJ)
 com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
@@ -178,7 +178,7 @@ modules.xml
 .idea/misc.xml
 *.ipr
 
-# Sonarlint plugin
+# Sonarlint at.technikum.swe.plugin
 .idea/sonarlint
 
 

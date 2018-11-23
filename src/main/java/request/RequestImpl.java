@@ -6,13 +6,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import main.java.foundation.Ensurer;
 import main.java.foundation.EnumUtil;
 import main.java.url.UrlImpl;
 
@@ -22,8 +18,6 @@ public class RequestImpl implements Request {
 
   private BufferedReader in;
   private String[] parameters;
-  private Map<String,String> headers;
-
 
   /**
    * https://www.tutorialspoint.com/http/http_requests.htm
@@ -52,24 +46,8 @@ public class RequestImpl implements Request {
     this.in = new BufferedReader(new InputStreamReader(in));
     try {
       setParameters();
-      setHeaders();
     } catch (IOException e) {
       logger.log(Level.FINE, "Unexpected error " + e.getMessage(), e);
-    }
-  }
-
-  private void setHeaders() throws IOException{
-    if(in!=null) {
-      this.headers = new HashMap<String, String>();
-
-      String line = in.readLine();
-      if(line!=null){
-      while (!line.isEmpty()) {
-
-        String parts[] = line.split(": ");
-        this.headers.put(parts[0].toLowerCase(), parts[1]);
-        line = in.readLine();
-      }}
     }
   }
 
@@ -115,22 +93,18 @@ public class RequestImpl implements Request {
 
   @Override
   public Map<String, String> getHeaders() {
-    System.out.println(this.headers.toString());
-    return Ensurer.ensureNotNull(headers,"Headers");
+    return null;
   }
 
   @Override
   public int getHeaderCount() {
-    return headers.size();
+    return 0;
   }
 
   @Override
   public String getUserAgent() {
-    if(headers.size()>0) {
-      return headers.get("user-agent");
-    }
     return null;
-    }
+  }
 
   @Override
   public int getContentLength() {
@@ -144,7 +118,6 @@ public class RequestImpl implements Request {
 
   @Override
   public InputStream getContentStream() {
-
     return null;
   }
 

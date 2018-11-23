@@ -1,4 +1,4 @@
-package main.java.plugin;
+package at.technikum.swe.plugin;
 
 
 import BIF.SWE1.interfaces.Plugin;
@@ -9,7 +9,7 @@ import java.util.Map;
 public class PluginUtil {
 
   /**
-   * Get the probability to use a specific at.technikum.swe.plugin in a given at.technikum.swe.request
+   * Get the probability to use a specific at.technikum.swe.at.technikum.swe.plugin in a given at.technikum.swe.at.technikum.swe.request
    * @param clazz - Specific pluginclass who extends from Plugin
    * @param req
    * @param <T>
