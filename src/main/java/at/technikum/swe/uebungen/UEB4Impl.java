@@ -1,5 +1,8 @@
 package at.technikum.swe.uebungen;
 
+import at.technikum.swe.plugin.PluginManagerImpl;
+import at.technikum.swe.request.RequestImpl;
+import at.technikum.swe.response.ResponseImpl;
 import java.io.InputStream;
 
 import BIF.SWE1.interfaces.PluginManager;
@@ -16,16 +19,16 @@ public class UEB4Impl implements UEB4 {
 
 	@Override
 	public Request getRequest(InputStream inputStream) {
-		return null;
+		return new RequestImpl(inputStream);
 	}
 
 	@Override
 	public Response getResponse() {
-		return null;
+		return new ResponseImpl();
 	}
 
 	@Override
 	public PluginManager getPluginManager() {
-		return null;
+		return new PluginManagerImpl();
 	}
 }

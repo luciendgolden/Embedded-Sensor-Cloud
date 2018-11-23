@@ -1,3 +1,13 @@
+## 0.2.1 (November 23, 2018)
+### Fixed
+  - libs/jars
+  - .gitignore
+  - duplicated packages
+
+## 0.2.0 (November 23, 2018)
+### Added
+  - added 'feature/UE04' support
+
 ## 0.1.2 (November 23, 2018)
 ### Fixed
   - package problem
