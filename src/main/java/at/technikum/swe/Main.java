@@ -9,7 +9,7 @@ public class Main {
 
   private final static Logger logger = Logger.getLogger(Main.class.getName());
 
-  private final static int MY_PORT = 8082;
+  private final static int MY_PORT = 8080;
 
   public static void main(String[] args) {
     MultiServer server = null;
