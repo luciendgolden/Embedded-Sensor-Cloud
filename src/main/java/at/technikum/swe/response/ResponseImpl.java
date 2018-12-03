@@ -3,6 +3,7 @@ package at.technikum.swe.response;
 import BIF.SWE1.interfaces.Response;
 import at.technikum.swe.common.Status;
 import at.technikum.swe.foundation.Ensurer;
+import at.technikum.swe.foundation.TimeUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -53,6 +54,8 @@ public class ResponseImpl implements Response {
   private static final String BLANK_SPACE = " ";
   private static final String LINE_BREAK = System.getProperty("line.separator");
 
+  private final static String LOCALE_SERVER_TIME = TimeUtil.getTime();
+
   private final static String DEFAULT_SERVER_HEADER = "BIF-SWE1-Server";
   private final static String HTTP_DEFAULT_VERSION = "HTTP/1.1";
 
@@ -71,6 +74,7 @@ public class ResponseImpl implements Response {
    * </html>
    */
   public ResponseImpl() {
+    headers.put("Date", LOCALE_SERVER_TIME);
     headers.put("Server", DEFAULT_SERVER_HEADER);
   }
 
@@ -83,7 +87,8 @@ public class ResponseImpl implements Response {
   public int getContentLength() {
     byte[] responseBytes = new byte[0];
     try {
-      responseBytes = content.getBytes("UTF-8");
+      if(content != null)
+        responseBytes = content.getBytes("UTF-8");
     } catch (UnsupportedEncodingException e) {
       logger.log(Level.SEVERE, "Unexpected error " + e.getMessage(), e);
     }
@@ -218,6 +223,9 @@ public class ResponseImpl implements Response {
 
   private String buildHeader(){
     StringBuilder builder = new StringBuilder();
+
+    if(getContentLength() > 0)
+      headers.put("Content-Length", String.valueOf(getContentLength()));
 
     String myHeaders = headers.entrySet().stream()
         .map(entry -> entry.getKey() + ": " + entry.getValue())

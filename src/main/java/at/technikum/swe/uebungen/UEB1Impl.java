@@ -2,7 +2,7 @@ package at.technikum.swe.uebungen;
 
 import BIF.SWE1.interfaces.UEB1;
 import BIF.SWE1.interfaces.Url;
-import main.java.url.UrlImpl;
+import at.technikum.swe.url.UrlImpl;
 
 public class UEB1Impl implements UEB1 {
 

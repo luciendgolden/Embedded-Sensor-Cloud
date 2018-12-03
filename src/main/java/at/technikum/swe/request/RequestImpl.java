@@ -7,6 +7,7 @@ import BIF.SWE1.interfaces.Url;
 import at.technikum.swe.common.HttpMethods;
 import at.technikum.swe.foundation.Ensurer;
 import at.technikum.swe.foundation.EnumUtil;
+import at.technikum.swe.url.UrlImpl;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -18,7 +19,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import main.java.url.UrlImpl;
 
 public class RequestImpl implements Request {
 
@@ -44,7 +44,7 @@ public class RequestImpl implements Request {
    * Accept-Encoding: gzip,deflate,sdch
    * Accept-Language: de-AT,de;q=0.8,en-US;q=0.6,en;q=0.4
    *
-   * CONTENT.........CONTENT
+   * CONTENT
    **/
   public RequestImpl(InputStream in) {
     this.in = new BufferedReader(new InputStreamReader(in));
@@ -58,8 +58,6 @@ public class RequestImpl implements Request {
   }
 
   private void setBody() throws IOException {
-
-
     boolean isPOST = isEqualTo(HttpMethods.class, getMethod(), HttpMethods.POST);
 
     if(isPOST){
@@ -184,17 +182,17 @@ public class RequestImpl implements Request {
         .collect(Collectors.joining(System.getProperty("line.separator")));
 
     builder.append("Request Line: ");
-    builder.append("\n");
+    builder.append("\n\t");
     builder.append(getRequestLine());
-    builder.append("\n");
-    builder.append("Request Type ");
+    builder.append("\n\t");
+    builder.append("Request Type: ");
     builder.append(getMethod());
-    builder.append("\n");
+    builder.append("\n\t");
     builder.append("Request Path ");
     builder.append(getUrl().getPath());
     builder.append("\n");
     builder.append("Headers ");
-    builder.append("\n");
+    builder.append("\n\t");
     builder.append(myHeaders);
 
     return builder.toString();

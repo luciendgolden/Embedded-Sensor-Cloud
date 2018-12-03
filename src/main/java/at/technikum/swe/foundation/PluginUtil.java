@@ -1,4 +1,4 @@
-package at.technikum.swe.plugin;
+package at.technikum.swe.foundation;
 
 
 import BIF.SWE1.interfaces.Plugin;
