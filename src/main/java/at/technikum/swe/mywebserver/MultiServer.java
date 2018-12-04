@@ -8,6 +8,8 @@ public class MultiServer {
 
   private final static Logger logger = Logger.getLogger(MultiServer.class.getName());
 
+  private static int CLIENT_COUNTER = 0;
+
   private ServerSocket serverSocket;
 
   public MultiServer(int port) throws IOException {
@@ -21,6 +23,8 @@ public class MultiServer {
        * days, until a client connects on port
        */
       new ClientHandler(serverSocket.accept()).start();
+      CLIENT_COUNTER++;
+      logger.info(String.format("Client has been connected"));
     }
   }
 

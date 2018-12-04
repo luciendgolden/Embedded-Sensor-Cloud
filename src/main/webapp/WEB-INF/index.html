@@ -4,9 +4,168 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
   <title>Document</title>
+
+  <style>
+    @import url(https://fonts.googleapis.com/css?family=Lato:100,400);
+
+    body{
+      margin: 0;
+      padding: 0;
+      background: #eee;
+    }
+
+    .box{
+      width: 250px;
+      height: 200px;
+      position: absolute;
+      left: calc(50% - 125px);
+      top: calc(50% - 100px);
+      left: -webkit-calc(50% - 125px);
+      top: -webkit-calc(50% - 100px);
+    }
+
+    .box span{
+      font-family: 'Lato', sans-serif;
+      font-weight: 300;
+      font-size: 20px;
+      position: absolute;
+    }
+
+    .box span:nth-child(2){
+      top: 2px;
+      left: 125px;
+    }
+
+    .box span:nth-child(7){
+      top: 85px;
+      left: 125px;
+    }
+
+    .box span:nth-child(12){
+      top: 165px;
+      left: 125px;
+    }
+
+    .server{
+      width: 110px;
+      height: 30px;
+      background: #3a3a3a;
+      border-radius: 1px;
+    }
+
+    .server ul{
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .server:first-child ul li{
+      width: 6px;
+      height: 6px;
+      float: left;
+      margin-left: 10px;
+      margin-top: 12px;
+      background: rgba(149,244,118,0.6);
+    }
+
+    .server ul li:first-child{
+      -webkit-animation: pattern1 0.14s linear infinite;
+    }
+
+    .server ul li:nth-child(2){
+      -webkit-animation: pattern1 0.14s 0.02s linear infinite;
+    }
+
+    .server ul li:last-child{
+      -webkit-animation: pattern1 0.14s 0.05s linear infinite;
+    }
+
+    @-webkit-keyframes pattern1{
+      0%{
+        background: rgba(149,244,118,0.6);
+      }
+      100%{
+        background: rgba(149,244,118,1);
+      }
+    }
+
+    .warning ul li{
+      width: 6px;
+      height: 6px;
+      float: left;
+      margin-left: 10px;
+      margin-top: 12px;
+      background: rgba(245,190,0,0.6);
+    }
+
+    .warning ul li:first-child{
+      -webkit-animation: pattern2 0.14s linear infinite;
+    }
+
+    .warning ul li:nth-child(2){
+      -webkit-animation: pattern2 0.14s 0.02s linear infinite;
+    }
+
+    .warning ul li:last-child{
+      -webkit-animation: pattern2 0.14s 0.05s linear infinite;
+    }
+
+    @-webkit-keyframes pattern2{
+      0%{
+        background: rgba(245,190,0,0.6);
+      }
+      100%{
+        background: rgba(245,190,0,1);
+      }
+    }
+
+    .error ul li{
+      width: 6px;
+      height: 6px;
+      float: left;
+      margin-left: 10px;
+      margin-top: 12px;
+      background: rgba(236,69,62,0.6);
+    }
+
+    .error ul li:first-child{
+      -webkit-animation: pattern3 0.9s linear infinite;
+    }
+
+    .error ul li:nth-child(2){
+      -webkit-animation: pattern3 0.9s linear infinite;
+    }
+
+    .error ul li:last-child{
+      -webkit-animation: pattern3 0.9s linear infinite;
+    }
+
+    @-webkit-keyframes pattern3{
+      0%{
+        background: rgba(236,69,62,0.6);
+      }
+      80%{
+        background: rgba(236,69,62,0.6);
+      }
+      100%{
+        background: rgba(236,69,62,1);
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello World</h1>
+<div class="box">
+  <div class="server">
+    <ul>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+  <span>RUNNING</span>
+</div>
 </body>
 </html>
