@@ -4,10 +4,11 @@ import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
 import BIF.SWE1.interfaces.Url;
-import at.technikum.swe.plugin.PluginUtil;
+import at.technikum.swe.foundation.PluginUtil;
 import at.technikum.swe.response.ResponseImpl;
 
 public class TestPlugin implements Plugin {
+
   @Override
   public float canHandle(Request request) {
     float handleable = PluginUtil.getTheProbability(TestPlugin.class, request);
@@ -27,7 +28,6 @@ public class TestPlugin implements Plugin {
     if (fileFromRequest.endsWith(".html")) {
       //TODO - send plugin html file
     }
-
 
     res.setContent("the content is set with TEST content now");
 

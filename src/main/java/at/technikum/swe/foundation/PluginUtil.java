@@ -1,19 +1,19 @@
-package at.technikum.swe.plugin;
+package at.technikum.swe.foundation;
 
 
 import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Url;
+import at.technikum.swe.url.UrlImpl;
 import java.util.Map;
 
 public class PluginUtil {
 
   /**
-   * Get the probability to use a specific at.technikum.swe.at.technikum.swe.plugin in a given at.technikum.swe.at.technikum.swe.request
+   * Get the probability to use a specific at.technikum.swe.at.technikum.swe.plugin in a given
+   * at.technikum.swe.at.technikum.swe.request
+   *
    * @param clazz - Specific pluginclass who extends from Plugin
-   * @param req
-   * @param <T>
-   * @return
    */
   public static <T extends Plugin> float getTheProbability(Class<T> clazz, Request req) {
     float handleable = 0f;
@@ -21,6 +21,10 @@ public class PluginUtil {
 
     String name = clazz.getSimpleName();
     String pluginName = name.substring(0, name.length() - 6);
+
+    if (((UrlImpl) req.getUrl()).hasSegments()) {
+
+    }
 
     //look for Plugin name in URL
     String pathParts[] = req.getUrl().getSegments();
@@ -30,7 +34,7 @@ public class PluginUtil {
       }
     }
 
-    if(url.getParameterCount() > 0) {
+    if (url.getParameterCount() > 0) {
       Map<String, String> parameters = req.getUrl().getParameter();
       if (parameters.get(name + "_plugin") == "true") {
         handleable += 0.2f;

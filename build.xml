@@ -41,6 +41,9 @@
 				<fileset dir="libs">
 					<include name="*"/>
 				</fileset>
+				<fileset dir="${basedir}">
+					<include name="WEB-INF/**"/>
+				</fileset>
 			</classpath>
 		</javac>
 		
