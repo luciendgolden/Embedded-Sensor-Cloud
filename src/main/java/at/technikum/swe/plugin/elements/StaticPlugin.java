@@ -1,5 +1,7 @@
 package at.technikum.swe.plugin.elements;
 
+import static at.technikum.swe.foundation.SystemUtil.FILE_SEPERATOR;
+
 import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
@@ -14,7 +16,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -64,10 +65,9 @@ public class StaticPlugin implements Plugin {
       logger.info(String.format("Searching for fileName: %s",
           System.getProperty("user.dir") + "/tmp-static-files/" + fileName));
 
-      File f = new File(System.getProperty("user.dir") + "/tmp-static-files");
+      File f = new File(System.getProperty("user.dir") + FILE_SEPERATOR + "tmp-static-files");
       File[] matchingFiles = f
           .listFiles((dir, name) -> name.equals(fileName));
-
 
       try {
         contentType = EnumUtil.getContainingEnumType(ContentTypes.class, extension);

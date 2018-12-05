@@ -1,22 +1,16 @@
 package at.technikum.swe.uebungen;
 
-import at.technikum.swe.plugin.PluginManagerImpl;
-import at.technikum.swe.plugin.elements.StaticPlugin;
-import at.technikum.swe.request.RequestImpl;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import static at.technikum.swe.foundation.SystemUtil.FILE_SEPERATOR;
 
 import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.PluginManager;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.UEB5;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
+import at.technikum.swe.plugin.PluginManagerImpl;
+import at.technikum.swe.plugin.elements.StaticPlugin;
+import at.technikum.swe.request.RequestImpl;
+import java.io.File;
+import java.io.InputStream;
 
 public class UEB5Impl implements UEB5 {
 
@@ -47,7 +41,7 @@ public class UEB5Impl implements UEB5 {
 
   @Override
   public String getStaticFileUrl(String s) {
-    File f = new File(System.getProperty("user.dir") + "/tmp-static-files");
+    File f = new File(System.getProperty("user.dir") + FILE_SEPERATOR + "tmp-static-files");
     File[] matchingFiles = f
         .listFiles((dir, name) -> name.equals(s));
 
@@ -55,7 +49,7 @@ public class UEB5Impl implements UEB5 {
       return matchingFiles[0].toString().replace(System.getProperty("user.dir"), "");
     }
 
-    return String.format("/tmp-static-files/%s", s);
+    return FILE_SEPERATOR + "tmp-static-files" + FILE_SEPERATOR + s;
   }
 }
 

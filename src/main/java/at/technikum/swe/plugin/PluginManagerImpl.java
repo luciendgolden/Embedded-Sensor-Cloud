@@ -5,15 +5,12 @@ import static at.technikum.swe.foundation.Lists.toList;
 import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.PluginManager;
 import at.technikum.swe.foundation.ClassLoader;
-import at.technikum.swe.foundation.Lists;
 import at.technikum.swe.plugin.elements.NaviPlugin;
 import at.technikum.swe.plugin.elements.StaticPlugin;
 import at.technikum.swe.plugin.elements.TemperaturPlugin;
 import at.technikum.swe.plugin.elements.ToLowerPlugin;
 import java.net.MalformedURLException;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class PluginManagerImpl implements PluginManager {
 
