@@ -1,8 +1,10 @@
-package main.java.url;
+package at.technikum.swe.url;
 
 import BIF.SWE1.interfaces.Url;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class UrlImpl implements Url {
@@ -39,13 +41,24 @@ public class UrlImpl implements Url {
 
   @Override
   public String getFileName() {
-    // TODO Auto-generated method stub
-    return null;
+    String[] segments = getSegments();
+    String lastSegment = segments[segments.length-1];
+
+    if(isValidFile(lastSegment))
+      return lastSegment;
+
+    return "";
   }
 
   @Override
   public String getExtension() {
-    return null;
+    String[] segments = getSegments();
+    String lastSegment = segments[segments.length-1];
+
+    if(lastSegment.contains("."))
+      return lastSegment.split("[.]")[1];
+
+    return "";
   }
 
   @Override
@@ -95,4 +108,15 @@ public class UrlImpl implements Url {
         .toArray(String[]::new);
   }
 
+  public boolean isValidFile(String arg){
+    Pattern pattern = Pattern.compile("^[0-9A-Za-zöäü\\-_]+.[A-Za-zöäü]+$");
+
+    Matcher matcher = pattern.matcher(arg);
+
+    return matcher.matches();
+  }
+
+  public boolean isFile(){
+    return !getFileName().isEmpty();
+  }
 }

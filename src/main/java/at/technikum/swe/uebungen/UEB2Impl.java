@@ -6,8 +6,8 @@ import BIF.SWE1.interfaces.UEB2;
 import BIF.SWE1.interfaces.Url;
 import at.technikum.swe.request.RequestImpl;
 import at.technikum.swe.response.ResponseImpl;
+import at.technikum.swe.url.UrlImpl;
 import java.io.InputStream;
-import main.java.url.UrlImpl;
 
 public class UEB2Impl implements UEB2 {
 

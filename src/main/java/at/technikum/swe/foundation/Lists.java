@@ -7,7 +7,14 @@ import java.util.List;
 
 public final class Lists {
 
-  private Lists() {
+  public static <T> ArrayList<T> toList(T... args){
+    final ArrayList<T> list = new ArrayList<>();
+
+    for(T arg: args){
+      list.add(arg);
+    }
+
+    return list;
   }
 
   public static <T> List<T> immutableList(List<T> list) {
