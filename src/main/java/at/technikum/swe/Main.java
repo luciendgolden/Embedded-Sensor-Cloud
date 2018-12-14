@@ -18,10 +18,14 @@ public class Main {
       logger.info("Starting server on port 127.0.0.1:" + MY_PORT);
       server = new MultiServer(MY_PORT);
       server.start();
-      server.stop();
-
     } catch (IOException e) {
-      logger.log(Level.SEVERE, "Unexpected error " + e.getMessage(), e);
+      logger.log(Level.SEVERE, "Cannot open port " + MY_PORT, e);
+    }finally {
+      try {
+        server.stop();
+      } catch (IOException e) {
+        logger.log(Level.SEVERE, "Unexpected error " + e.getMessage(), e);
+      }
     }
   }
 

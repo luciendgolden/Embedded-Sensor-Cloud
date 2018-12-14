@@ -44,7 +44,7 @@ public class UrlImpl implements Url {
     String[] segments = getSegments();
     String lastSegment = segments[segments.length-1];
 
-    if(isValidFile(lastSegment))
+    if(isValidSupportedFile(lastSegment))
       return lastSegment;
 
     return "";
@@ -108,8 +108,9 @@ public class UrlImpl implements Url {
         .toArray(String[]::new);
   }
 
-  public boolean isValidFile(String arg){
-    Pattern pattern = Pattern.compile("^[0-9A-Za-zöäü\\-_]+.[A-Za-zöäü]+$");
+
+  public boolean isValidSupportedFile(String arg){
+    Pattern pattern = Pattern.compile("^([0-9A-Za-zöäü\\-_])+.([0-9A-Za-zöäü\\-_])+$");
 
     Matcher matcher = pattern.matcher(arg);
 

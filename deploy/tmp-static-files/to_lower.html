@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
+  <title>Index</title>
+
+  <!-- Bootstrap -->
+  <link href="bootstrap.css" rel="stylesheet">
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script>
+    $(function () {
+      $("span").click(myPOST);
+
+      function myPOST() {
+        var myRead = $("#input1").val();
+
+        console.log(myRead);
+
+        /*
+        $.post("http://localhost:8082/tolower?tolower_plugin=true",
+            {value: myRead},
+            function(data, status){
+              alert("Data: " + data + "\nStatus: " + status);
+            });
+        */
+
+        $.ajax({
+          type: "POST",
+          url: "http://localhost:8082/tolower?tolower_plugin=true",
+          data: JSON.stringify({value: myRead}),
+          contentType: "application/json",
+          success: function(data){alert(data);},
+          failure: function(errMsg) {
+            alert(errMsg);
+          }
+        });
+      }
+    });
+  </script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="bootstrap.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>SWE1-Java to_lower</h1>
+    </div>
+  </div>
+  <hr/>
+  <div class="row">
+    <form class="form-inline">
+      <div class="form-group mx-sm-3 mb-2">
+        <label for="input1" class="sr-only">Password</label>
+        <input type="text" class="form-control myInput" id="input1" placeholder="Your text here">
+      </div>
+      <span class="btn btn-primary mb-2 mySubmit" id="mySubmit">Submit</span>
+    </form>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <input class="form-control myControl" type="text" placeholder="ToLower result.." readonly>
+    </div>
+  </div>
+</div>
+</body>
+</html>

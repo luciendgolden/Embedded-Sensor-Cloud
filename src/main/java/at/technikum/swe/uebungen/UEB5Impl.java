@@ -1,6 +1,7 @@
 package at.technikum.swe.uebungen;
 
 import static at.technikum.swe.foundation.SystemUtil.FILE_SEPERATOR;
+import static at.technikum.swe.foundation.SystemUtil.USER_DIR;
 
 import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.PluginManager;
@@ -41,15 +42,16 @@ public class UEB5Impl implements UEB5 {
 
   @Override
   public String getStaticFileUrl(String s) {
-    File f = new File(System.getProperty("user.dir") + FILE_SEPERATOR + "tmp-static-files");
+    File f = new File(USER_DIR + FILE_SEPERATOR + "tmp-static-files");
     File[] matchingFiles = f
         .listFiles((dir, name) -> name.equals(s));
 
     if (matchingFiles.length > 0) {
-      return matchingFiles[0].toString().replace(System.getProperty("user.dir"), "");
+      return (matchingFiles[0].toString().replace(USER_DIR, ""))
+          .replace(FILE_SEPERATOR, "/");
     }
 
-    return FILE_SEPERATOR + "tmp-static-files" + FILE_SEPERATOR + s;
+    return String.format("/tmp-static-files/%s", s);
   }
 }
 

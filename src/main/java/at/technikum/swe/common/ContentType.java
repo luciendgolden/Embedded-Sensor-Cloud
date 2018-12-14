@@ -1,6 +1,6 @@
 package at.technikum.swe.common;
 
-public enum ContentTypes {
+public enum ContentType {
   /**
    * Type application
    */
@@ -55,7 +55,7 @@ public enum ContentTypes {
 
   private final String value;
 
-  ContentTypes(String value) {
+  ContentType(String value) {
     this.value = value;
   }
 

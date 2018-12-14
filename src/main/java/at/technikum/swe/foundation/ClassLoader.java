@@ -6,6 +6,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.jar.JarFile;
 import java.util.logging.Logger;
 
@@ -35,7 +36,16 @@ public class ClassLoader {
       String jarURL = "jar:" + fileURL + "!/";
       URL urls[] = {new URL(jarURL)};
       URLClassLoader ucl = new URLClassLoader(urls);
-      plugin = (Plugin) Class.forName(className, true, ucl).newInstance();
+      Class<?> clazz = Class.forName(className, true, ucl);
+      Class<?>[] clazzInterfaces = clazz.getInterfaces();
+
+      /*
+      Arrays.stream(clazzInterfaces).filter(e -> e.equals("Plugin"))
+          .map(e -> e.newInstance())
+      */
+
+      plugin = (Plugin) clazz.newInstance();
+
     }
 
     return plugin;
