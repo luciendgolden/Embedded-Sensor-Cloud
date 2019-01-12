@@ -19,20 +19,9 @@
 
       function myPOST() {
         var myRead = $("#input1").val();
-
-        console.log(myRead);
-
-        /*
-        $.post("http://localhost:8082/tolower?tolower_plugin=true",
-            {value: myRead},
-            function(data, status){
-              alert("Data: " + data + "\nStatus: " + status);
-            });
-        */
-
         $.ajax({
           type: "POST",
-          url: "http://localhost:8082/tolower?tolower_plugin=true",
+          url: "/tolower?tolower_plugin=true",
           data: JSON.stringify({value: myRead}),
           contentType: "application/json",
           success: function(data){alert(data);},

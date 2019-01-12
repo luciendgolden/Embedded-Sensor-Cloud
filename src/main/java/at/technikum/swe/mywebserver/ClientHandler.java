@@ -3,15 +3,13 @@ package at.technikum.swe.mywebserver;
 import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
+import at.technikum.swe.DAL.MySQLAccess;
 import at.technikum.swe.plugin.PluginManagerImpl;
 import at.technikum.swe.request.RequestImpl;
-import at.technikum.swe.response.ResponseImpl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,7 +40,7 @@ public class ClientHandler extends Thread {
       this.out = clientSocket.getOutputStream();
 
       Request req = new RequestImpl(in);
-      //logger.info(String.format("Received request:\n%s", req));
+      logger.info(String.format("Received request:\n%s", req));
 
       Response res = null;
 

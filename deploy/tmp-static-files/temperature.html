@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <link rel="shortcut icon" type="image/x-icon" href="favicon.ico"/>
+  <title>Index</title>
+
+  <!-- Bootstrap -->
+  <link href="bootstrap.css" rel="stylesheet">
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- Custom js -->
+  <script type="text/javascript">
+    $(function () {
+      var LIMIT = 50;
+      var current_page = 0;
+
+      var date1;
+      var date2;
+
+      /**
+       * Next click handler
+       */
+      $('#next').click(function () {
+        var isNextDisabled = isDisabled(this);
+
+        if(!isNextDisabled) {
+          clearTable();
+          current_page++;
+          loadData();
+        }
+      });
+
+      /**
+       * Previous click handler
+       */
+      $('#previous').click(function () {
+        var isPreviousDisabled = isDisabled(this);
+
+        if (!isPreviousDisabled) {
+          clearTable();
+          current_page--;
+          loadData();
+        }
+      });
+
+      /**
+       * Submit handler
+       */
+      $('#mySubmit').click(function () {
+        current_page = 1;
+        getDateFromInput();
+        clearTable();
+        loadData();
+      });
+
+      function getDateFromInput() {
+        date1 = $('#date1').val();
+        date2 = $('#date2').val();
+      }
+
+      function clearTable() {
+        $('#myTable tbody').empty();
+      }
+
+      function loadData() {
+        $.ajax({
+          type: "GET",
+          url: "/temperature",
+          data: {
+            "firstDate": date1,
+            "secondDate": date2,
+            "page": current_page,
+            "limit": LIMIT
+          },
+          success: function (xml) {
+            var dataset = $(xml).find("temperature").attr("dataset");
+            var max_page = Math.ceil(dataset / LIMIT);
+
+            previewPagination(dataset, max_page);
+
+            $('teperature-entry', xml).each(function () {
+              var id = $(this).attr("id");
+              var date = $('date', this).text(),
+                  min_temp = $('min_temp', this).text(),
+                  max_temp = $('max_temp', this).text();
+
+              add(id, date, min_temp, max_temp);
+            });
+          },
+          error: function (errMsg) {
+            alert(errMsg);
+          }
+        });
+      }
+
+      function isDisabled(el){
+        return $(el).hasClass("disabled");
+      }
+
+      function removeDisabled(el){
+        return $(el).removeClass("disabled");
+      }
+
+      function addDisabled(el){
+        return $(el).addClass("disabled");
+      }
+
+      function add(id, date, min_temp, max_temp) {
+        $('#myTable').append(
+            '<tr><td>' + id + '</td><td>' + date + '</td><td>' + min_temp + '</td><td>' + max_temp
+            + '</td></tr>');
+      }
+
+      /**
+       * Show pagination below table
+       */
+      function previewPagination(dataset, max_page) {
+        var showFrom = current_page * LIMIT;
+        var showTo = dataset;
+
+        var nextEl = $('#next');
+        var previousEl = $('#previous');
+
+        if(max_page>current_page){
+          removeDisabled(nextEl);
+        }else{
+          addDisabled(nextEl);
+        }
+
+        if(current_page>1){
+          removeDisabled(previousEl);
+        }else{
+          addDisabled(previousEl);
+        }
+
+        if (showFrom <= showTo) {
+          $('.preview').text(showFrom + '/' + showTo);
+        } else {
+          $('.preview').text(showTo + '/' + showTo);
+        }
+      }
+
+    });
+  </script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="bootstrap.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12">
+      <h1>SWE1-Java to_lower</h1>
+    </div>
+  </div>
+  <hr/>
+
+  <div class="row">
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label>Begin voorverkoop periode</label>
+        <input type="date" id="date1" name="bday" max="2019-12-31"
+               min="2004-01-01" class="form-control" value="2018-01-15">
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <div class="form-group">
+        <label>Einde voorverkoop periode</label>
+        <input type="date" id="date2" name="bday" min="2004-01-01"
+               max="2019-12-31" class="form-control" value="2019-01-15">
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <span class="btn btn-primary" id="mySubmit">Submit</span>
+    </div>
+  </div>
+
+  <!--DATATABLE START-->
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="table-responsive">
+        <table id="myTable" class="table table-bordred table-striped">
+          <thead>
+          <th>Id</th>
+          <th>Date</th>
+          <th>Min_temp</th>
+          <th>Max_temp</th>
+          </thead>
+          <tbody>
+          <!-- tablerows appended by jquery -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <!--- DATATABLE END -->
+
+  <div class="row">
+    <div class="col-sm-12">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination float-right">
+          <li class="page-item disabled" id="previous"><a class="page-link" href="#">Previous</a></li>
+          <li class="page-item disabled"><a class="page-link preview" href="#">0/0</a></li>
+          <li class="page-item disabled" id="next"><a class="page-link" href="#">Next</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

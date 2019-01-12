@@ -50,8 +50,8 @@ public class RequestImpl implements Request {
   private synchronized void parseRequest() {
     try {
       setParameters();
-      //setHeaders();
-      //setBody();
+      setHeaders();
+      setBody();
     } catch (IOException e) {
       logger.log(Level.WARNING, "Unexpected error " + e.getMessage(), e);
     }

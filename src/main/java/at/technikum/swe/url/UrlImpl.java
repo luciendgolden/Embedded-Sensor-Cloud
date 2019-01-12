@@ -103,7 +103,13 @@ public class UrlImpl implements Url {
 
   @Override
   public String[] getSegments() {
-    return Arrays.stream(raw.substring(1).split("/"))
+    String pathy = raw.substring(1);
+
+    if(pathy.contains("?")){
+      pathy = pathy.split("[?]")[0];
+    }
+
+    return Arrays.stream(pathy.split("/"))
         .map(String::trim)
         .toArray(String[]::new);
   }

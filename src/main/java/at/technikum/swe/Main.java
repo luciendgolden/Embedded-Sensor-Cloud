@@ -1,6 +1,7 @@
 package at.technikum.swe;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import at.technikum.swe.mywebserver.MultiServer;
@@ -20,10 +21,13 @@ public class Main {
       server.start();
     } catch (IOException e) {
       logger.log(Level.SEVERE, "Cannot open port " + MY_PORT, e);
-    }finally {
+    } catch (SQLException | ClassNotFoundException e) {
+      logger.log(Level.SEVERE, "Unexpected SQL Initializiation error " + e.getMessage(), e);
+    } finally {
       try {
         server.stop();
-      } catch (IOException e) {
+        logger.info("stopped server..");
+      } catch (IOException | SQLException e) {
         logger.log(Level.SEVERE, "Unexpected error " + e.getMessage(), e);
       }
     }
