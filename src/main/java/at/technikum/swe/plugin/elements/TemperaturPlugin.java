@@ -1,6 +1,7 @@
 package at.technikum.swe.plugin.elements;
 
 import static at.technikum.swe.common.Status.OK;
+import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 
 import BIF.SWE1.interfaces.Plugin;
@@ -39,10 +40,6 @@ public class TemperaturPlugin implements Plugin {
 
   private final TemperatureDAO temperatureDAO = new TemperatureDAO();
 
-  private List<Temperature> resultTemp = null;
-
-  private Optional<Integer> rowCount;
-
   private final XMLSerealizer xmlSerealizer = new XMLSerealizer();
 
   @Override
@@ -74,18 +71,19 @@ public class TemperaturPlugin implements Plugin {
        * Eine REST Abfrage http://localhost:8080/GetTemperature/2012/09/20 soll alle Temeraturdaten
        * des angegebenen Tages als XML zurück geben. Das XML Format ist frei wählbar.
        */
+      List<Temperature> resultTemp = null;
+      Optional<Integer> rowCount = empty();
       final ResponseImpl res = new ResponseImpl();
       final String[] segments = request.getUrl().getSegments();
 
-      final UrlImpl urlimpl = (UrlImpl)request.getUrl();
+      final UrlImpl urlimpl = (UrlImpl) request.getUrl();
       boolean isRESTRequestXML = false;
 
-
-      if(segments.length>3) {
+      if (segments.length > 3) {
         isRESTRequestXML = (segments[segments.length - 4]).equals("GetTemperature");
       }
 
-      boolean isGETRequestXML =  (segments[segments.length - 1]).equals("temperature");
+      boolean isGETRequestXML = (segments[segments.length - 1]).equals("temperature");
 
       if (isRESTRequestXML) {
         //send XML for the year
@@ -96,7 +94,7 @@ public class TemperaturPlugin implements Plugin {
 
         resultTemp = temperatureDAO.findByDate(connection, java.sql.Date.valueOf(datetofind));
 
-      } else if(isGETRequestXML){
+      } else if (isGETRequestXML) {
         String firstDate = urlimpl.getParameter().get("firstDate");
         String secondDate = urlimpl.getParameter().get("secondDate");
         Optional<Integer> page = ofNullable(Integer.valueOf(urlimpl.getParameter().get("page")));
@@ -105,17 +103,21 @@ public class TemperaturPlugin implements Plugin {
         String[] firstDateArr = firstDate.split("-");
         String[] secondDateArr = secondDate.split("-");
 
-        LocalDate firstLocalDate = getValidLocalDate(firstDateArr[0], firstDateArr[1], firstDateArr[2]);
-        LocalDate secondLocalDate = getValidLocalDate(secondDateArr[0], secondDateArr[1], secondDateArr[2]);
+        LocalDate firstLocalDate = getValidLocalDate(firstDateArr[0], firstDateArr[1],
+            firstDateArr[2]);
+        LocalDate secondLocalDate = getValidLocalDate(secondDateArr[0], secondDateArr[1],
+            secondDateArr[2]);
 
-        rowCount = ofNullable(temperatureDAO.countDateBetween(connection, java.sql.Date.valueOf(firstLocalDate),
-            java.sql.Date.valueOf(secondLocalDate)));
+        rowCount = ofNullable(
+            temperatureDAO.countDateBetween(connection, java.sql.Date.valueOf(firstLocalDate),
+                java.sql.Date.valueOf(secondLocalDate)));
 
-        resultTemp = temperatureDAO.findDateBetween(connection, java.sql.Date.valueOf(firstLocalDate),
-            java.sql.Date.valueOf(secondLocalDate), page, limit);
+        resultTemp = temperatureDAO
+            .findDateBetween(connection, java.sql.Date.valueOf(firstLocalDate),
+                java.sql.Date.valueOf(secondLocalDate), page, limit);
       }
 
-      Document document = buildXMLDocument();
+      Document document = buildXMLDocument(resultTemp, rowCount);
       InputStream in = xmlSerealizer.toXML(document);
 
       res.setContentType(ContentType.APPLICATION_XML);
@@ -136,17 +138,17 @@ public class TemperaturPlugin implements Plugin {
   private LocalDate getValidLocalDate(String year, String month, String day) {
     LocalDate datetofind;
     if (TimeUtil.checkDate(year, month, day)) {
-       datetofind = LocalDate
+      datetofind = LocalDate
           .of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
-    }
-    else {
+    } else {
       datetofind = LocalDate
           .of(9999, 12, 12);
     }
     return datetofind;
   }
 
-  private Document buildXMLDocument() throws ParserConfigurationException {
+  public Document buildXMLDocument(List<Temperature> list, Optional<Integer> rowCount)
+      throws ParserConfigurationException {
     DocumentBuilderFactory documentFactory = DocumentBuilderFactory.newInstance();
 
     DocumentBuilder documentBuilder = documentFactory.newDocumentBuilder();
@@ -162,10 +164,10 @@ public class TemperaturPlugin implements Plugin {
     dataset.setValue(String.valueOf(rowCount.orElse(0)));
     root.setAttributeNode(dataset);
 
-    if (resultTemp != null) {
-      for (Temperature tempElement : resultTemp) {
+    if (list != null) {
+      for (Temperature tempElement : list) {
         // temp element
-        Element temp = document.createElement("teperature-entry");
+        Element temp = document.createElement("temperature-entry");
 
         root.appendChild(temp);
 

@@ -5,13 +5,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import BIF.SWE1.interfaces.Plugin;
+import BIF.SWE1.interfaces.PluginManager;
 import at.technikum.swe.DAO.MySQLAccess;
 import at.technikum.swe.DAO.TemperatureDAO;
 import at.technikum.swe.common.Configuration;
 import at.technikum.swe.domain.Temperature;
+import at.technikum.swe.foundation.Ensurer;
 import at.technikum.swe.foundation.SystemUtil;
 import at.technikum.swe.foundation.TimeUtil;
 import at.technikum.swe.parser.CSVParser;
+import at.technikum.swe.plugin.PluginManagerImpl;
+import at.technikum.swe.plugin.elements.TemperaturPlugin;
 import at.technikum.swe.sensor.SensorReader;
 import at.technikum.swe.service.TemperatureService;
 import java.io.BufferedReader;
@@ -30,15 +35,38 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicLong;
+import javax.xml.parsers.ParserConfigurationException;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class TestCase {
 
+  @BeforeClass
+  public static void initialize() throws SQLException, ClassNotFoundException {
+    MySQLAccess mySQLAccess = MySQLAccess.newInstance();
+    mySQLAccess.initializeConnection();
+  }
+
+  @AfterClass
+  public static void closeConnection() throws SQLException {
+    MySQLAccess mySQLAccess = MySQLAccess.newInstance();
+    mySQLAccess.closeAllConnections();
+  }
+
   @Test
-  public void myTest() {
+  public void test004() {
     File file = new File(
         "/Users/alexander/git/java/EmbeddedSensorCloud/SWE1-Java/deploy/tmp-static-files/theme.html");
 
@@ -46,30 +74,29 @@ public class TestCase {
     boolean isDirectory = file.isDirectory(); // Check if it's a directory
     boolean isFile = file.isFile();      // Check if it's a regular file
 
-    System.out.println("Exists: " + exists);
-    System.out.println("IsDirectory: " + isDirectory);
-    System.out.println("IsFile"
-        + ": " + isFile);
+    assertEquals(false, exists);
+    assertEquals(false, isDirectory);
+    assertEquals(false, isFile);
   }
 
   @Test
-  public void webAppTest() {
+  public void test005() {
     ClassLoader classLoader = getClass().getClassLoader();
-    InputStream in = classLoader.getResourceAsStream("WEB-INF/index.html");
-    URL url = classLoader.getResource("WEB-INF/");
+    URL url = classLoader.getResource("WEB-INF/index.html");
 
     final StringBuilder path = new StringBuilder();
 
-    path.append(SystemUtil.USER_DIR);
-    path.append(String.format("%ssrc%smain%swebapp%sWEB-INF%s404.html", SystemUtil.FILE_SEPERATOR,
-        SystemUtil.FILE_SEPERATOR, SystemUtil.FILE_SEPERATOR, SystemUtil.FILE_SEPERATOR,
+    ///Users/alexander/git/java/EmbeddedSensorCloud/SWE1-Java/
+    path.append("file:" + SystemUtil.USER_DIR);
+    path.append(String.format("%sbin%sWEB-INF%sindex.html", SystemUtil.FILE_SEPERATOR,
+        SystemUtil.FILE_SEPERATOR,
         SystemUtil.FILE_SEPERATOR));
 
-    System.out.println(url.toString());
+    assertEquals(path.toString(), url.toString());
   }
 
   @Test
-  public void testBody() throws IOException {
+  public void test006() throws IOException {
     String body = null;
 
     ByteArrayOutputStream ms = new ByteArrayOutputStream();
@@ -100,31 +127,31 @@ public class TestCase {
     String message = value.substring(1, value.length() - 1);
     String toLowerMessage = message.toLowerCase();
 
-    assertEquals(toLowerMessage, "helloworld");
+    assertEquals("helloworld", toLowerMessage);
   }
 
   @Test
-  public void createPrimaryKey() {
+  public void test007() {
     final AtomicLong counter = new AtomicLong(1000);
-    System.out.println(counter);
+    assertEquals("1000", counter.toString());
     counter.incrementAndGet();
-    System.out.println(counter);
+    assertEquals("1001", counter.toString());
   }
 
   @Test
-  public void initialize() throws IOException {
+  public void test008() throws IOException {
     Properties properties = new Properties();
 
     try (InputStreamReader reader = new InputStreamReader(Configuration.class.getClassLoader()
         .getResourceAsStream("configuration.properties"))) {
       properties.load(reader);
 
-      System.out.println(properties.getProperty("csv.weatherfile1"));
+      assertEquals("2005-2009_weather-data-spain.csv", properties.getProperty("csv.weatherfile1"));
     }
   }
 
   @Test
-  public void setupDatabaseCon() throws Exception {
+  public void test009() throws Exception {
     Configuration configuration = new Configuration().initialize();
     Connection connection = null;
     String username = configuration.getProperty("mysql.username");
@@ -147,6 +174,8 @@ public class TestCase {
               + ")");
       pstmt.executeUpdate();
 
+      assertNotNull(pstmt);
+
     } catch (SQLException e) {
       System.out.println("Connection Failed! Check output console");
       e.printStackTrace();
@@ -158,20 +187,22 @@ public class TestCase {
   }
 
   @Test
-  public void testDropAndCreateTable() throws Exception {
+  public void test010() throws Exception {
+    int returnValue = -1;
+
     MySQLAccess mySQLAccess = MySQLAccess.newInstance();
-    mySQLAccess.initializeConnection();
 
     Connection con = mySQLAccess.getConnect();
 
     TemperatureDAO temperatureDAO = new TemperatureDAO();
-    temperatureDAO.createTable(con);
+    returnValue = temperatureDAO.createTable(con);
     mySQLAccess.returnConnection(con);
-    con.close();
+
+    assertEquals(0, returnValue);
   }
 
   @Test
-  public void insertRowIntoDB(){
+  public void test011() {
     MySQLAccess mySQLAccess = null;
     Connection con = null;
 
@@ -179,99 +210,104 @@ public class TestCase {
       //given
       final TemperatureDAO temperatureDAO = new TemperatureDAO();
       final Temperature temperature = new Temperature();
-      final LocalDate localDate = LocalDate.of(2019,10,12);
+      final LocalDate localDate = LocalDate.of(2019, 10, 12);
       temperature.setDate(localDate);
       temperature.setMinTemperature(-11.0f);
       temperature.setMaxTemperature(70f);
 
-
       mySQLAccess = MySQLAccess.newInstance();
       con = mySQLAccess.getConnect();
 
-      //when
-      mySQLAccess.initializeConnection();
-
-      int worked = temperatureDAO.insert(con,temperature);
+      //WHEN
+      int worked = temperatureDAO.insert(con, temperature);
 
       //then
-      assertEquals(1,worked);
+      assertEquals(1, worked);
 
-    } catch (SQLException | ClassNotFoundException e) {
+    } catch (SQLException e) {
       e.printStackTrace();
-    }finally {
+    } finally {
       mySQLAccess.returnConnection(con);
-      try {
-        con.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
     }
   }
 
   @Test
-  public void readCSV(){
+  public void test012() {
+    Map<Long, String[]> map = null;
     CSVParser parcival = new CSVParser();
-      parcival.loadCSVAdvanced();
+    map = parcival.loadCSVAdvanced();
+
+    assertNotNull(map);
   }
 
   @Test
-  public void initialDBLoad() throws SQLException {
+  public void test013() throws SQLException {
     TemperatureService service = new TemperatureService();
-
     service.initialDBLoad();
+
+    assertNotNull(service);
   }
 
   @Test
-  public void listAllEntries() throws SQLException {
+  public void test014() throws SQLException {
+
     MySQLAccess mySQLAccess = MySQLAccess.newInstance();
     Connection con = mySQLAccess.getConnect();
-    LocalDate myDate = LocalDate.of(2005,10,3);
+    LocalDate myDate = LocalDate.of(2005, 10, 3);
+    List<Temperature> temperatureList = null;
 
     TemperatureDAO temperatureDAO = new TemperatureDAO();
-    temperatureDAO.findByDate(con, java.sql.Date.valueOf(myDate));
 
+    temperatureList = temperatureDAO.findByDate(con, java.sql.Date.valueOf(myDate));
+
+    assertNotNull(temperatureList);
+    assertEquals(7,temperatureList.size());
   }
 
   @Test
-  public void test(){
+  public void test015() {
     int value = 38838;
-    if(value!=0){
-      LocalDate now = LocalDate.now();
-      System.out.println(now);
-      System.out.println("hello");
+    LocalDate now = null;
+
+    if (value != 0) {
+      now = LocalDate.now();
     }
+    assertEquals("2019-01-17",now.toString());
   }
 
   @Test
-  public void testForFindAll() throws SQLException {
+  public void test016() throws SQLException {
     MySQLAccess mySQLAccess = MySQLAccess.newInstance();
     Connection con = mySQLAccess.getConnect();
 
     TemperatureDAO temperatureDAO = new TemperatureDAO();
     List<Temperature> temperatureList = temperatureDAO.listAll(con);
 
-    temperatureList.forEach(System.out::println);
+    assertNotNull(temperatureList);
   }
 
   @Test
-  public void testDate(){
+  public void test017() {
     boolean isValid = TimeUtil.checkDate("2018", "08", "ab");
 
-    System.out.println(isValid);
+    assertEquals(false,isValid);
   }
 
   @Test
-  public void TestRandomDataReader() throws InterruptedException {
+  public void test018() throws InterruptedException {
     TemperatureService service = new TemperatureService();
     service.initialDBLoad();
     SensorReader sensy = new SensorReader();
 
-      sensy.start();
-      sensy.join();
+    assertNotNull(sensy);
+    sensy.start();
+
+    assertNotNull(sensy);
+
   }
 
   @Test
-  public void findDateBetween() throws SQLException {
+  public void test003() throws SQLException {
     MySQLAccess mySQLAccess = MySQLAccess.newInstance();
     Connection con = mySQLAccess.getConnect();
 
@@ -284,16 +320,18 @@ public class TestCase {
     String[] secondDateArr = secondDate.split("-");
 
     LocalDate firstLocalDate = getValidLocalDate(firstDateArr[0], firstDateArr[1], firstDateArr[2]);
-    LocalDate secondLocalDate = getValidLocalDate(secondDateArr[0], secondDateArr[1], secondDateArr[2]);
+    LocalDate secondLocalDate = getValidLocalDate(secondDateArr[0], secondDateArr[1],
+        secondDateArr[2]);
 
-    List<Temperature> list = temperatureDAO.findDateBetween(con, java.sql.Date.valueOf(firstLocalDate),
-        java.sql.Date.valueOf(secondLocalDate), of(1), of(50));
+    List<Temperature> list = temperatureDAO
+        .findDateBetween(con, java.sql.Date.valueOf(firstLocalDate),
+            java.sql.Date.valueOf(secondLocalDate), of(1), of(50));
 
-    list.forEach(System.out::println);
+    assertEquals(50, list.size());
   }
 
   @Test
-  public void countDateBetween() throws SQLException {
+  public void test002() throws SQLException {
     MySQLAccess mySQLAccess = MySQLAccess.newInstance();
     Connection con = mySQLAccess.getConnect();
 
@@ -306,12 +344,13 @@ public class TestCase {
     String[] secondDateArr = secondDate.split("-");
 
     LocalDate firstLocalDate = getValidLocalDate(firstDateArr[0], firstDateArr[1], firstDateArr[2]);
-    LocalDate secondLocalDate = getValidLocalDate(secondDateArr[0], secondDateArr[1], secondDateArr[2]);
+    LocalDate secondLocalDate = getValidLocalDate(secondDateArr[0], secondDateArr[1],
+        secondDateArr[2]);
 
     Integer counter = temperatureDAO.countDateBetween(con, java.sql.Date.valueOf(firstLocalDate),
         java.sql.Date.valueOf(secondLocalDate));
 
-    System.out.println(counter);
+    assertEquals("2434", String.valueOf(counter));
   }
 
   private LocalDate getValidLocalDate(String year, String month, String day) {
@@ -319,8 +358,7 @@ public class TestCase {
     if (TimeUtil.checkDate(year, month, day)) {
       datetofind = LocalDate
           .of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
-    }
-    else {
+    } else {
       datetofind = LocalDate
           .of(9999, 12, 12);
     }
@@ -328,7 +366,70 @@ public class TestCase {
   }
 
   @Test
-  public void test001(){
+  public void test019(){
+    final PluginManager pluginManager = new PluginManagerImpl();
+    List<Plugin> list = (List<Plugin>) pluginManager.getPlugins();
 
+    assertNotNull(list);
+    assertEquals(4, list.size());
+  }
+
+  @Test
+  public void test020(){
+    Temperature temperature = new Temperature();
+    temperature.setId(1l);
+    temperature.setDate(LocalDate.of(2018,01,01));
+    temperature.setMinTemperature(18.4f);
+    temperature.setMaxTemperature(19.4f);
+
+    Object object = Ensurer.ensureNotNull(temperature);
+
+    assertNotNull(object);
+  }
+
+  @Test
+  public void test001() {
+    //given
+    final TemperaturPlugin temperaturPlugin = new TemperaturPlugin();
+    final List<Temperature> temperatureList = new ArrayList<>();
+
+    Document document = null;
+
+    final Temperature temperature = new Temperature();
+    temperature.setId(1l);
+    temperature.setDate(LocalDate.of(2018, 01, 16));
+    temperature.setMinTemperature(16.4f);
+    temperature.setMaxTemperature(20.4f);
+
+    temperatureList.add(temperature);
+    //when
+    try {
+      document = temperaturPlugin.buildXMLDocument(temperatureList, of(1));
+    } catch (ParserConfigurationException e) {
+      //throw exception
+    }
+
+    NodeList nList = document.getElementsByTagName("temperature-entry");
+    Node nNode = nList.item(0);
+    Element eElement = (Element) nNode;
+
+    assertEquals("temperature", document.getDocumentElement().getNodeName());
+    assertEquals("1", document.getDocumentElement().getAttribute("dataset"));
+    assertEquals(1, nList.getLength());
+
+    assertEquals("temperature-entry", nNode.getNodeName());
+
+    assertEquals(Node.ELEMENT_NODE, nNode.getNodeType());
+
+    assertEquals("1", eElement.getAttribute("id"));
+    assertEquals("2018-01-16", eElement.getElementsByTagName("date").item(0).getTextContent());
+    assertEquals("16.4", eElement
+        .getElementsByTagName("min_temp")
+        .item(0)
+        .getTextContent());
+    assertEquals("20.4", eElement
+        .getElementsByTagName("max_temp")
+        .item(0)
+        .getTextContent());
   }
 }

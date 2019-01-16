@@ -38,6 +38,10 @@ public class MySQLAccess {
     }
   }
 
+  private MySQLAccess(){
+
+  }
+
   public static synchronized MySQLAccess newInstance(){
     if(instance == null){
       instance = new MySQLAccess();

@@ -1,3 +1,0 @@
-"station_id","station_name","lat","lat_dir","long","long_dir","altitude","town","province","year","month","day","max_temp","max_temp_time","min_temp","min_temp_time","avg_temp","max_wind","max_wind_direction","max_wind_time","avg_wind","rainfall","sun","max_atmospheric_pressure","max_atmospheric_pressure_hour","min_atmospheric_pressure","min_atmospheric_pressure_hour"
-"0016A","REUS AEROPUERTO","41.0859","N","01.1044","E",71,"Constantí","TARRAGONA",2006,2,15,"14.9","11:24","2","6:08","8.4","9.2",99,"Varias","3.1","0","6.2","1014.4","0","1003.9","24"
-"0016A","REUS AEROPUERTO","41.0859","N","01.1044","E",71,"Constantí","TARRAGONA",2007,6,13,"27.3","13:49","17.6","4:28","22.4","7.8",14,"11:23","2.8","0","12.9","1002.4","0","998.4","17"
