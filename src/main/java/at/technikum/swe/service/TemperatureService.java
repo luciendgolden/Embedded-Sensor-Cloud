@@ -1,8 +1,8 @@
 package at.technikum.swe.service;
 
-import at.technikum.swe.DAL.MySQLAccess;
-import at.technikum.swe.DAL.TemperatureDAL;
-import at.technikum.swe.DAO.Temperature;
+import at.technikum.swe.DAO.MySQLAccess;
+import at.technikum.swe.DAO.TemperatureDAO;
+import at.technikum.swe.domain.Temperature;
 import at.technikum.swe.foundation.Constants;
 import at.technikum.swe.parser.CSVParser;
 import java.sql.Connection;
@@ -18,7 +18,7 @@ public class TemperatureService {
 
   private final MySQLAccess mySQLAccess = MySQLAccess.newInstance();
 
-  private TemperatureDAL temperatureDAL;
+  private TemperatureDAO temperatureDAO;
   private Map<Long, String[]> data;
 
   public synchronized void initialDBLoad() {
@@ -34,13 +34,13 @@ public class TemperatureService {
           Constants.CSV_MAX_COLUMN,
           Constants.CSV_MIN_COLUMN);
 
-      temperatureDAL = new TemperatureDAL();
+      temperatureDAO = new TemperatureDAO();
 
-      if (temperatureDAL.tableExist(con)) {
+      if (temperatureDAO.tableExist(con)) {
         return;
       }
 
-      temperatureDAL.createTable(con);
+      temperatureDAO.createTable(con);
 
       isCommit = con.getAutoCommit();
 
@@ -70,7 +70,7 @@ public class TemperatureService {
         temperature.setMinTemperature(min);
         temperature.setMaxTemperature(max);
 
-        temperatureDAL.insert(con, temperature);
+        temperatureDAO.insert(con, temperature);
       }
 
       logger.info("Loading datarows finished..");

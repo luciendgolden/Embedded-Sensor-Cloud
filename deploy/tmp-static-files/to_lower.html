@@ -22,9 +22,18 @@
         $.ajax({
           type: "POST",
           url: "/tolower?tolower_plugin=true",
-          data: JSON.stringify({value: myRead}),
-          contentType: "application/json",
-          success: function(data){alert(data);},
+          transformRequest: function(obj) {
+            var str = [];
+            for(var p in obj)
+              str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+            return str.join("&");
+          },
+          data: {value: myRead},
+          contentType: "application/x-www-form-urlencoded",
+          success: function(data){
+            console.log(data);
+            $('.myControl').val(data);
+          },
           failure: function(errMsg) {
             alert(errMsg);
           }

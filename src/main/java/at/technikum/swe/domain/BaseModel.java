@@ -1,4 +1,4 @@
-package at.technikum.swe.DAO;
+package at.technikum.swe.domain;
 
 import at.technikum.swe.foundation.Ensurer;
 import java.time.LocalDateTime;

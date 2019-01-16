@@ -1,6 +1,6 @@
 package at.technikum.swe.mywebserver;
 
-import at.technikum.swe.DAL.MySQLAccess;
+import at.technikum.swe.DAO.MySQLAccess;
 import at.technikum.swe.sensor.SensorReader;
 import at.technikum.swe.service.TemperatureService;
 import java.io.IOException;

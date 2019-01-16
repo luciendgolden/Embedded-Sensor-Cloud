@@ -3,7 +3,6 @@ package at.technikum.swe.mywebserver;
 import BIF.SWE1.interfaces.Plugin;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
-import at.technikum.swe.DAL.MySQLAccess;
 import at.technikum.swe.plugin.PluginManagerImpl;
 import at.technikum.swe.request.RequestImpl;
 import java.io.IOException;

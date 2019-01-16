@@ -1,18 +1,14 @@
 package at.technikum.swe.plugin.elements;
 
-import static at.technikum.swe.common.Status.NOT_FOUND;
 import static at.technikum.swe.common.Status.OK;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 
 import BIF.SWE1.interfaces.Plugin;
-import BIF.SWE1.interfaces.PluginManager;
 import BIF.SWE1.interfaces.Request;
 import BIF.SWE1.interfaces.Response;
-import at.technikum.swe.DAL.MySQLAccess;
-import at.technikum.swe.DAL.TemperatureDAL;
-import at.technikum.swe.DAO.Temperature;
+import at.technikum.swe.DAO.MySQLAccess;
+import at.technikum.swe.DAO.TemperatureDAO;
+import at.technikum.swe.domain.Temperature;
 import at.technikum.swe.common.ContentType;
 import at.technikum.swe.foundation.PluginUtil;
 import at.technikum.swe.foundation.TimeUtil;
@@ -41,7 +37,7 @@ public class TemperaturPlugin implements Plugin {
 
   private Connection connection = null;
 
-  private final TemperatureDAL temperatureDAL = new TemperatureDAL();
+  private final TemperatureDAO temperatureDAO = new TemperatureDAO();
 
   private List<Temperature> resultTemp = null;
 
@@ -98,7 +94,7 @@ public class TemperaturPlugin implements Plugin {
         String day = segments[segments.length - 1];
         LocalDate datetofind = getValidLocalDate(year, month, day);
 
-        resultTemp = temperatureDAL.findByDate(connection, java.sql.Date.valueOf(datetofind));
+        resultTemp = temperatureDAO.findByDate(connection, java.sql.Date.valueOf(datetofind));
 
       } else if(isGETRequestXML){
         String firstDate = urlimpl.getParameter().get("firstDate");
@@ -112,10 +108,10 @@ public class TemperaturPlugin implements Plugin {
         LocalDate firstLocalDate = getValidLocalDate(firstDateArr[0], firstDateArr[1], firstDateArr[2]);
         LocalDate secondLocalDate = getValidLocalDate(secondDateArr[0], secondDateArr[1], secondDateArr[2]);
 
-        rowCount = ofNullable(temperatureDAL.countDateBetween(connection, java.sql.Date.valueOf(firstLocalDate),
+        rowCount = ofNullable(temperatureDAO.countDateBetween(connection, java.sql.Date.valueOf(firstLocalDate),
             java.sql.Date.valueOf(secondLocalDate)));
 
-        resultTemp = temperatureDAL.findDateBetween(connection, java.sql.Date.valueOf(firstLocalDate),
+        resultTemp = temperatureDAO.findDateBetween(connection, java.sql.Date.valueOf(firstLocalDate),
             java.sql.Date.valueOf(secondLocalDate), page, limit);
       }
 

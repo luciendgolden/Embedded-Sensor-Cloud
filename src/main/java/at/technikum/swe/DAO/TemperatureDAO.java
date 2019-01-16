@@ -1,22 +1,21 @@
-package at.technikum.swe.DAL;
+package at.technikum.swe.DAO;
 
-import at.technikum.swe.DAO.Temperature;
+import at.technikum.swe.domain.Temperature;
 import at.technikum.swe.exception.PersistenceException;
 import at.technikum.swe.persistence.AbstractJdbcRepository;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-public class TemperatureDAL extends AbstractJdbcRepository<Temperature, Long> {
+public class TemperatureDAO extends AbstractJdbcRepository<Temperature, Long> {
 
-  private final static Logger logger = Logger.getLogger(TemperatureDAL.class.getName());
+  private final static Logger logger = Logger.getLogger(TemperatureDAO.class.getName());
   public static final int COLUMN_IDX_ID = 1;
   public static final int COLUMN_IDX_DATE = 2;
   public static final int COLUMN_IDX_MIN_TEMP = 3;
@@ -24,7 +23,7 @@ public class TemperatureDAL extends AbstractJdbcRepository<Temperature, Long> {
 
   public static final String COUNTER = "counter";
 
-  public TemperatureDAL() {
+  public TemperatureDAO() {
     super(Temperature.class);
   }
 

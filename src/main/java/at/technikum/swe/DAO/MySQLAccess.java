@@ -1,4 +1,4 @@
-package at.technikum.swe.DAL;
+package at.technikum.swe.DAO;
 
 import at.technikum.swe.common.Configuration;
 import java.io.IOException;

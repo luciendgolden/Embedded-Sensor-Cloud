@@ -66,10 +66,13 @@ public class RequestImpl implements Request {
     if (br != null) {
       String line = br.readLine();
       if (line != null) {
-        while (!line.isEmpty()) {
+        while (!line.equals("")) {
           String parts[] = line.split(": ");
           this.headers.put(parts[0].toLowerCase(), parts[1]);
           line = br.readLine();
+          if (!br.ready()) {
+            break;
+          }
         }
       }
     }
@@ -79,9 +82,12 @@ public class RequestImpl implements Request {
     boolean isPOST = isEqualTo(HttpMethods.class, getMethod(), HttpMethods.POST);
 
     if (isPOST) {
-      if (br != null) {
-        this.body = br.readLine();
+
+      StringBuilder builder = new StringBuilder();
+      while (br.ready()) {
+        builder.append((char) br.read());
       }
+      this.body = builder.toString();
     }
   }
 

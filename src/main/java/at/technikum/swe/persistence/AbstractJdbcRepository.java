@@ -1,8 +1,7 @@
 package at.technikum.swe.persistence;
 
-import at.technikum.swe.DAO.BaseModel;
+import at.technikum.swe.domain.BaseModel;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;

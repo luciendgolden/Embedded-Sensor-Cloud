@@ -1,6 +1,6 @@
 package at.technikum.swe.persistence;
 
-import at.technikum.swe.DAO.BaseModel;
+import at.technikum.swe.domain.BaseModel;
 import at.technikum.swe.exception.PersistenceException;
 import java.sql.Connection;
 import java.sql.SQLException;

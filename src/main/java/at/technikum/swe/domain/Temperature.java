@@ -1,7 +1,6 @@
-package at.technikum.swe.DAO;
+package at.technikum.swe.domain;
 
 import java.time.LocalDate;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class Temperature extends BaseModel<Temperature, Long>{
 

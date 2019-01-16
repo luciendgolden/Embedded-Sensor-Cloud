@@ -1,15 +1,14 @@
 import static at.technikum.swe.foundation.SystemUtil.LINE_SEPERATOR;
 
-import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import at.technikum.swe.DAL.MySQLAccess;
-import at.technikum.swe.DAL.TemperatureDAL;
+import at.technikum.swe.DAO.MySQLAccess;
+import at.technikum.swe.DAO.TemperatureDAO;
 import at.technikum.swe.common.Configuration;
-import at.technikum.swe.DAO.Temperature;
+import at.technikum.swe.domain.Temperature;
 import at.technikum.swe.foundation.SystemUtil;
 import at.technikum.swe.foundation.TimeUtil;
 import at.technikum.swe.parser.CSVParser;
@@ -31,7 +30,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicLong;
@@ -166,8 +164,8 @@ public class TestCase {
 
     Connection con = mySQLAccess.getConnect();
 
-    TemperatureDAL temperatureDAL = new TemperatureDAL();
-    temperatureDAL.createTable(con);
+    TemperatureDAO temperatureDAO = new TemperatureDAO();
+    temperatureDAO.createTable(con);
     mySQLAccess.returnConnection(con);
     con.close();
   }
@@ -179,7 +177,7 @@ public class TestCase {
 
     try {
       //given
-      final TemperatureDAL temperatureDAL = new TemperatureDAL();
+      final TemperatureDAO temperatureDAO = new TemperatureDAO();
       final Temperature temperature = new Temperature();
       final LocalDate localDate = LocalDate.of(2019,10,12);
       temperature.setDate(localDate);
@@ -193,7 +191,7 @@ public class TestCase {
       //when
       mySQLAccess.initializeConnection();
 
-      int worked = temperatureDAL.insert(con,temperature);
+      int worked = temperatureDAO.insert(con,temperature);
 
       //then
       assertEquals(1,worked);
@@ -229,8 +227,8 @@ public class TestCase {
     Connection con = mySQLAccess.getConnect();
     LocalDate myDate = LocalDate.of(2005,10,3);
 
-    TemperatureDAL temperatureDAL = new TemperatureDAL();
-    temperatureDAL.findByDate(con, java.sql.Date.valueOf(myDate));
+    TemperatureDAO temperatureDAO = new TemperatureDAO();
+    temperatureDAO.findByDate(con, java.sql.Date.valueOf(myDate));
 
   }
 
@@ -249,8 +247,8 @@ public class TestCase {
     MySQLAccess mySQLAccess = MySQLAccess.newInstance();
     Connection con = mySQLAccess.getConnect();
 
-    TemperatureDAL temperatureDAL = new TemperatureDAL();
-    List<Temperature> temperatureList = temperatureDAL.listAll(con);
+    TemperatureDAO temperatureDAO = new TemperatureDAO();
+    List<Temperature> temperatureList = temperatureDAO.listAll(con);
 
     temperatureList.forEach(System.out::println);
   }
@@ -277,7 +275,7 @@ public class TestCase {
     MySQLAccess mySQLAccess = MySQLAccess.newInstance();
     Connection con = mySQLAccess.getConnect();
 
-    TemperatureDAL temperatureDAL = new TemperatureDAL();
+    TemperatureDAO temperatureDAO = new TemperatureDAO();
 
     String firstDate = "2009-01-13";
     String secondDate = "2019-01-14";
@@ -288,7 +286,7 @@ public class TestCase {
     LocalDate firstLocalDate = getValidLocalDate(firstDateArr[0], firstDateArr[1], firstDateArr[2]);
     LocalDate secondLocalDate = getValidLocalDate(secondDateArr[0], secondDateArr[1], secondDateArr[2]);
 
-    List<Temperature> list = temperatureDAL.findDateBetween(con, java.sql.Date.valueOf(firstLocalDate),
+    List<Temperature> list = temperatureDAO.findDateBetween(con, java.sql.Date.valueOf(firstLocalDate),
         java.sql.Date.valueOf(secondLocalDate), of(1), of(50));
 
     list.forEach(System.out::println);
@@ -299,7 +297,7 @@ public class TestCase {
     MySQLAccess mySQLAccess = MySQLAccess.newInstance();
     Connection con = mySQLAccess.getConnect();
 
-    TemperatureDAL temperatureDAL = new TemperatureDAL();
+    TemperatureDAO temperatureDAO = new TemperatureDAO();
 
     String firstDate = "2009-01-13";
     String secondDate = "2019-01-14";
@@ -310,7 +308,7 @@ public class TestCase {
     LocalDate firstLocalDate = getValidLocalDate(firstDateArr[0], firstDateArr[1], firstDateArr[2]);
     LocalDate secondLocalDate = getValidLocalDate(secondDateArr[0], secondDateArr[1], secondDateArr[2]);
 
-    Integer counter = temperatureDAL.countDateBetween(con, java.sql.Date.valueOf(firstLocalDate),
+    Integer counter = temperatureDAO.countDateBetween(con, java.sql.Date.valueOf(firstLocalDate),
         java.sql.Date.valueOf(secondLocalDate));
 
     System.out.println(counter);
@@ -327,5 +325,10 @@ public class TestCase {
           .of(9999, 12, 12);
     }
     return datetofind;
+  }
+
+  @Test
+  public void test001(){
+
   }
 }

@@ -1,16 +1,12 @@
 package at.technikum.swe.sensor;
 
-import at.technikum.swe.DAL.MySQLAccess;
-import at.technikum.swe.DAL.TemperatureDAL;
-import at.technikum.swe.DAO.Temperature;
+import at.technikum.swe.DAO.MySQLAccess;
+import at.technikum.swe.DAO.TemperatureDAO;
+import at.technikum.swe.domain.Temperature;
 import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,8 +34,8 @@ public class SensorReader extends Thread {
         random = -10f + r.nextFloat() * (38f + 10f);
         readTemp.setMaxTemperature(random);
 
-        TemperatureDAL temperatureDAL = new TemperatureDAL();
-        temperatureDAL.insert(con, readTemp);
+        TemperatureDAO temperatureDAO = new TemperatureDAO();
+        temperatureDAO.insert(con, readTemp);
         logger.info(String.format("Inserted new datarow %s", readTemp));
         sleep(6000000l);
       }
