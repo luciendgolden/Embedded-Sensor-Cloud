@@ -1,6 +1,9 @@
 package at.technikum.swe.response;
 
+import static at.technikum.swe.foundation.SystemUtil.LINE_SEPERATOR;
+
 import BIF.SWE1.interfaces.Response;
+import at.technikum.swe.common.ContentType;
 import at.technikum.swe.common.Status;
 import at.technikum.swe.foundation.Ensurer;
 import at.technikum.swe.foundation.TimeUtil;
@@ -52,7 +55,8 @@ public class ResponseImpl implements Response {
   private String content;
 
   private static final String BLANK_SPACE = " ";
-  private static final String LINE_BREAK = System.getProperty("line.separator");
+
+  private final static String LOCALE_SERVER_TIME = TimeUtil.getTime();
 
   private final static String LOCALE_SERVER_TIME = TimeUtil.getTime();
 
@@ -101,6 +105,11 @@ public class ResponseImpl implements Response {
     return headers.get("Content-Type");
   }
 
+  public void setContentType(ContentType s) {
+    Ensurer.ensureNotNull(s, "contentType");
+    headers.put("Content-Type", s.getValue());
+  }
+
   @Override
   public void setContentType(String s) {
     Ensurer.ensureNotNull(s, "contentType");
@@ -108,9 +117,14 @@ public class ResponseImpl implements Response {
     headers.put("Content-Type", s);
   }
 
+  public void setStatusCode(Status status) {
+    Ensurer.ensureNotNull(status, "status");
+    this.status = status;
+  }
+
   @Override
   public void setStatusCode(int i) {
-    status = Status.compareStatusCode(i);
+    status = Status.getStatusTypeWhenExists(i);
     Ensurer.ensureNotNull(status, "status");
   }
 
@@ -181,7 +195,7 @@ public class ResponseImpl implements Response {
   }
 
   @Override
-  public void send(OutputStream outputStream) {
+  public synchronized void send(OutputStream outputStream) {
     Ensurer.ensureNotNull(outputStream, "outputstream");
     Ensurer.ensureNotNull(status, "status");
     Ensurer.ensureNotNull(headers, "headers");
@@ -190,8 +204,10 @@ public class ResponseImpl implements Response {
 
       finalRes.append(buildMessageStatusLine());
       finalRes.append(buildHeader());
-      finalRes.append(LINE_BREAK);
+      finalRes.append(LINE_SEPERATOR);
       finalRes.append(buildBody());
+
+      System.out.println(finalRes);
 
       outputStream.write(finalRes.toString().getBytes(Charset.forName("UTF-8")));
     } catch (IOException e) {
@@ -199,24 +215,12 @@ public class ResponseImpl implements Response {
     }
   }
 
-  private String buildBody(){
-    final StringBuilder builder = new StringBuilder();
-
-    if(content != null) {
-      builder.append(content);
-    }else if(content == null && headers.containsKey("Content-Type")){
-      throw new IllegalArgumentException("Content-Type is set without content");
-    }
-
-    return builder.toString();
-  }
-
   private String buildMessageStatusLine() {
     final StringBuilder builder = new StringBuilder(HTTP_DEFAULT_VERSION);
 
     builder.append(BLANK_SPACE);
     builder.append(status.getStatusCode()).append(BLANK_SPACE);
-    builder.append(status.getDescription()).append(LINE_BREAK);
+    builder.append(status.getDescription()).append(LINE_SEPERATOR);
 
     return builder.toString();
   }
@@ -229,10 +233,22 @@ public class ResponseImpl implements Response {
 
     String myHeaders = headers.entrySet().stream()
         .map(entry -> entry.getKey() + ": " + entry.getValue())
-        .collect(Collectors.joining(LINE_BREAK));
+        .collect(Collectors.joining(LINE_SEPERATOR));
 
     builder.append(myHeaders);
-    builder.append(LINE_BREAK);
+    builder.append(LINE_SEPERATOR);
+
+    return builder.toString();
+  }
+
+  private String buildBody(){
+    final StringBuilder builder = new StringBuilder();
+
+    if(content != null) {
+      builder.append(content);
+    }else if(content == null && headers.containsKey("Content-Type")){
+      throw new IllegalArgumentException("Content-Type is set without content");
+    }
 
     return builder.toString();
   }

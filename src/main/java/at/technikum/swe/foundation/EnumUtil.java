@@ -5,7 +5,7 @@ import java.util.EnumSet;
 public class EnumUtil {
 
   /**
-   * Search for a specific Type of an Enum
+   * Search for a specific Type of an Enum and check if the string exists as an Enum
    *
    * @param clazz - type of the Enum which should be searched
    * @param name - String to compare
@@ -22,6 +22,13 @@ public class EnumUtil {
     return false;
   }
 
+  /**
+   * Check if given string is contained by any Enum in  the EnumClass
+   * @param clazz
+   * @param name
+   * @param <T>
+   * @return
+   */
   public static <T extends Enum<T>> T getContainingEnumType(Class<T> clazz, String name) {
     for (T e : EnumSet.allOf(clazz)) {
       if (e.name().contains(name.toUpperCase())) {
