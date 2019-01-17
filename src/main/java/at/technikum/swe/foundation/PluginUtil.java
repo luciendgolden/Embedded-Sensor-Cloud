@@ -22,10 +22,6 @@ public class PluginUtil {
     String name = clazz.getSimpleName().toLowerCase();
     String pluginName = name.substring(0, name.length() - 6);
 
-    if (((UrlImpl) req.getUrl()).hasSegments()) {
-
-    }
-
     //look for Plugin name in URL
     String pathParts[] = req.getUrl().getSegments();
     for (String path : pathParts) {

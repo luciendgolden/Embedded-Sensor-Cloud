@@ -58,8 +58,6 @@ public class ResponseImpl implements Response {
 
   private final static String LOCALE_SERVER_TIME = TimeUtil.getTime();
 
-  private final static String LOCALE_SERVER_TIME = TimeUtil.getTime();
-
   private final static String DEFAULT_SERVER_HEADER = "BIF-SWE1-Server";
   private final static String HTTP_DEFAULT_VERSION = "HTTP/1.1";
 
