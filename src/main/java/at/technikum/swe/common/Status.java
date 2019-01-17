@@ -57,7 +57,7 @@ public enum Status{
     return description;
   }
 
-  public static Status compareStatusCode(int code){
+  public static Status getStatusTypeWhenExists(int code){
     for(Status value:Status.values()){
       if(value.getStatusCode() == code)
         return value;
